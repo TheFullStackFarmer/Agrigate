@@ -1,0 +1,24 @@
+version: "3"
+
+services:
+  message-broker:
+    image: emqx:5.6.1
+    container_name: message-broker
+    environment:
+      - "EQMX_NODE_NAME=emqx@node1.emqx.io"
+      - "EMQX_CLUSTER__DISCOVERY_STRATEGY=static"
+      - "EMQX_CLUSTER__STATIC__SEEDS=[emqx@node1.emqx.io]"
+    healthcheck:
+      test: ["CMD", "/opt/emqx/bin/emqx", "ctl", "status"]
+      interval: 5s
+      timeout: 25s
+      retries: 5
+    volumes:
+      - ./dc/message-broker/data:/opt/emqx/data
+      - ./dc/message-broker/logs:/opt/emqx/log
+    ports:
+      - 1883:1883
+      - 8083:8083
+      - 8084:8084
+      - 8883:8883
+      - 18083:18083
