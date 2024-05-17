@@ -1,47 +1,54 @@
 ---
+slug: /
 sidebar_position: 1
 ---
 
-# Tutorial Intro
+# Introduction
 
-Let's discover **Docusaurus in less than 5 minutes**.
+Agrigate is a platform that collects, manages, and analyzes all of your
+agricultural data to help you run a more efficient, profitable farm. As long as
+you have a computer and internet connection, you can download and install
+agrigate in as little as 5 minutes.
 
-## Getting Started
+Once installed, no internet connection is needed; however, a local network is
+required to access the application. In addtion, some features will not function
+properly without an active internet connection.
 
-Get started by **creating a new site**.
+## Technical Details
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
+Agrigate is built using Docker, .Net and React. It also uses certain third-party
+platforms.
 
-### What you'll need
+### Dependencies
 
-- [Node.js](https://nodejs.org/en/download/) version 18.0 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
+#### Infrastructure
 
-## Generate a new site
+- [Docker](https://www.docker.com/) - Orchestration
+- [EMQX](https://www.emqx.io/) - MQTT Broker
+- [Postgres](https://www.postgresql.org/) - Database
 
-Generate a new Docusaurus site using the **classic template**.
+#### Services
 
-The classic template will automatically be added to your project after you run the command:
+- [.Net](https://dotnet.microsoft.com/en-us/) - Business logic and services
 
-```bash
-npm init docusaurus@latest my-website classic
-```
+#### Web Application
 
-You can type this command into Command Prompt, Powershell, Terminal, or any other integrated terminal of your code editor.
+- [React](https://react.dev/) - UI
+- [JoyUI](https://mui.com/joy-ui/getting-started/) - UI Components
+- [FontAwesome](https://fontawesome.com/) - Icons
+- [Day.js](https://day.js.org/) - Date & Time calculations
+- [Recharts](https://recharts.org/en-US/) - Charts
+- [Recoil](https://recoiljs.org/) - State management
 
-The command also installs all necessary dependencies you need to run Docusaurus.
+### Versioning
 
-## Start your site
+Agrigate uses [semantic versioning](https://semver.org/) following the
+\{MAJOR\}.\{MINOR\}.\{PATCH\} format
 
-Run the development server:
+Release notes for each version can be found via the Releases page
 
-```bash
-cd my-website
-npm run start
-```
+## Contact Information
 
-The `cd` command changes the directory you're working with. In order to work with your newly created Docusaurus site, you'll need to navigate the terminal there.
-
-The `npm run start` command builds your website locally and serves it through a development server, ready for you to view at http://localhost:3000/.
-
-Open `docs/intro.md` (this page) and edit some lines: the site **reloads automatically** and displays your changes.
+Agrigate is developed and maintained by [The Full Stack Farmer](www.google.com).
+For assistance, reach out to
+[support@thefullstackfarmer.com](support@thefullstackfarmer.com)

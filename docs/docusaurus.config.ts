@@ -33,19 +33,12 @@ const config: Config = {
       "classic",
       {
         docs: {
+          routeBasePath: "/",
           sidebarPath: "./sidebars.ts",
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
           editUrl:
-            "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
+            "https://github.com/TheFullStackFarmer/Agrigate/tree/main/docs",
         },
-        blog: {
-          showReadingTime: true,
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
-        },
+        blog: false,
         theme: {
           customCss: "./src/css/custom.css",
         },
@@ -57,21 +50,32 @@ const config: Config = {
     // Replace with your project's social card
     image: "img/docusaurus-social-card.jpg",
     navbar: {
-      title: "My Site",
+      title: "Agrigate",
       logo: {
-        alt: "My Site Logo",
+        alt: "Agrigate",
         src: "img/logo.svg",
       },
       items: [
         {
           type: "docSidebar",
-          sidebarId: "tutorialSidebar",
+          sidebarId: "docs",
           position: "left",
-          label: "Tutorial",
+          label: "Docs",
         },
-        { to: "/blog", label: "Blog", position: "left" },
+        // {
+        //   type: "docSidebar",
+        //   sidebarId: "guides",
+        //   position: "left",
+        //   label: "Guides",
+        // },
+        // {
+        //   type: "docSidebar",
+        //   sidebarId: "releases",
+        //   position: "left",
+        //   label: "Release Notes",
+        // },
         {
-          href: "https://github.com/facebook/docusaurus",
+          href: "https://github.com/TheFullStackFarmer/Agrigate",
           label: "GitHub",
           position: "right",
         },
