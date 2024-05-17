@@ -49,6 +49,6 @@ Release notes for each version can be found via the Releases page
 
 ## Contact Information
 
-Agrigate is developed and maintained by [The Full Stack Farmer](www.google.com).
-For assistance, reach out to
-[support@thefullstackfarmer.com](support@thefullstackfarmer.com)
+Agrigate is developed and maintained by
+[The Full Stack Farmer](https://thefullstackfarmer.com/). For assistance, reach
+out to [support@thefullstackfarmer.com](mailto:support@thefullstackfarmer.com)
