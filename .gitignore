@@ -1,2 +1,9 @@
 # Docker-Compose volumes
 dc/
+
+# VS build directories
+bin/
+obj/
+
+# Settings files
+appsettings.*.json
