@@ -1,7 +1,8 @@
+using Agrigate.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Agrigate.Domain.Entities.IoT;
+namespace Agrigate.IoT.Domain.Entities;
 
 /// <summary>
 /// The definition of a method that can be executed on a device

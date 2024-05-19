@@ -1,7 +1,8 @@
+using Agrigate.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Agrigate.Domain.Entities.IoT;
+namespace Agrigate.IoT.Domain.Entities;
 
 /// <summary>
 /// The representation of a physical device that can communicate with Agrigate
