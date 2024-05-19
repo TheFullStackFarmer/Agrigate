@@ -28,6 +28,11 @@ const config: Config = {
     locales: ["en"],
   },
 
+  markdown: {
+    mermaid: true,
+  },
+  themes: ["@docusaurus/theme-mermaid"],
+
   presets: [
     [
       "classic",
@@ -61,6 +66,12 @@ const config: Config = {
           sidebarId: "docs",
           position: "left",
           label: "Docs",
+        },
+        {
+          type: "docSidebar",
+          sidebarId: "design",
+          position: "left",
+          label: "Design",
         },
         // {
         //   type: "docSidebar",
