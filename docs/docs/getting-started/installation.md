@@ -33,6 +33,7 @@ Coming soon!
 ### Run Docker-Compose
 
 ```
-cd ./agrigate
+cd ./Agrigate
+docker-compose build
 docker-compose up
 ```

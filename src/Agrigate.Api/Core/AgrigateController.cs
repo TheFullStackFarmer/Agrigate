@@ -1,3 +1,5 @@
+using Akka.Actor;
+using Akka.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Agrigate.Api.Core;
@@ -6,7 +8,11 @@ namespace Agrigate.Api.Core;
 [Route("[controller]")]
 public abstract class AgrigateController : ControllerBase
 {
-    public AgrigateController()
+    protected readonly IActorRef ApiSupervisor;
+
+    public AgrigateController(ActorRegistry registry)
     {
+        ApiSupervisor = registry.Get<ApiSupervisor>() 
+            ?? throw new ArgumentNullException("ApiSupervisor not available!");
     }
 }

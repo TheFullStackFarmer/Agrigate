@@ -1,5 +1,8 @@
 using Agrigate.Api.Controllers.Features.IoT.Models;
 using Agrigate.Api.Core;
+using Agrigate.Domain.Messages;
+using Akka.Actor;
+using Akka.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Agrigate.Api.Controllers.Features.IoT.Controllers;
@@ -9,7 +12,7 @@ namespace Agrigate.Api.Controllers.Features.IoT.Controllers;
 /// </summary>
 public class DevicesController : AgrigateController
 {
-    public DevicesController() : base()
+    public DevicesController(ActorRegistry registry) : base(registry)
     {
     }
 
@@ -19,9 +22,18 @@ public class DevicesController : AgrigateController
     /// <param name="registration"></param>
     /// <returns></returns>
     [HttpPost]
-    public IActionResult RegisterDevice(DeviceRegistration registration)
+    public async Task<IActionResult> RegisterDevice(DeviceRegistration registration)
     {
-        return Ok();
+        try 
+        {
+            var result = await ApiSupervisor.Ask(new TestMessage("This is a test message"), TimeSpan.FromSeconds(5));
+            return Ok(result);
+        }
+        catch (Exception ex) 
+        {
+            Console.WriteLine($"Exception: {ex.Message}");
+            return Ok(ex.Message);
+        }
     }
 
     /// <summary>
