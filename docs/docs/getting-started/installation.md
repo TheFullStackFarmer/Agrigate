@@ -16,9 +16,19 @@ Before installing Agrigate, be sure to have the following:
 
 ## Project Structure
 
-Coming Soon!
+```
+- README.md
+- docker-compose.yml
+- src
+  - Agrigate.Api        # The public api for interacting with Agrigate
+  - Agrigate.Domain     # Models and data shared between projects
+  - Agrigate.IoT        # The IoT service
+- docs                  # This documentation site
+```
 
 ## Setup
+
+To start running Agrigate, complete the following steps:
 
 ### Clone the Repo
 
