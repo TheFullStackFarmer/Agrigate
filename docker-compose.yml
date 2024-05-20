@@ -16,6 +16,7 @@ services:
     volumes:
       - ./dc/message-broker/data:/opt/emqx/data
       - ./dc/message-broker/logs:/opt/emqx/log
+      - ./dc/message-broker/etc:/opt/emqx/etc
     ports:
       - 1883:1883
       - 8083:8083
