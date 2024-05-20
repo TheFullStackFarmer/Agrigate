@@ -16,9 +16,26 @@ services:
     volumes:
       - ./dc/message-broker/data:/opt/emqx/data
       - ./dc/message-broker/logs:/opt/emqx/log
+      - ./dc/message-broker/etc:/opt/emqx/etc
     ports:
       - 1883:1883
       - 8083:8083
       - 8084:8084
       - 8883:8883
       - 18083:18083
+
+  iot:
+    build:
+      context: ./src
+      dockerfile: Dockerfile.IoT
+    depends_on:
+      - message-broker
+
+  api:
+    build:
+      context: ./src
+      dockerfile: Dockerfile.API
+    depends_on:
+      - iot
+    ports:
+      - 8080:8080

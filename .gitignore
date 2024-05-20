@@ -1,2 +1,10 @@
 # Docker-Compose volumes
-dc/
+dc/message-broker/data
+dc/message-broker/logs
+
+# VS build directories
+bin/
+obj/
+
+# Settings files
+appsettings.*.json

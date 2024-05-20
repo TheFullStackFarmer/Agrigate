@@ -1,0 +1,56 @@
+﻿{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:58905",
+      "sslPort": 44380
+    }
+  },
+  "profiles": {
+    "http": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:5098",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "Api__Service__Hostname": "localhost",
+        "Api__Service__Port": "8081",
+        "Api__IoTService__ServiceName": "IoTService",
+        "Api__IoTService__Hostname": "localhost",
+        "Api__IoTService__Port": "5000"
+      }
+    },
+    "https": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "https://localhost:7121;http://localhost:5098",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "Api__Service__Hostname": "localhost",
+        "Api__Service__Port": "8081",
+        "Api__IoTService__ServiceName": "IoTService",
+        "Api__IoTService__Hostname": "localhost",
+        "Api__IoTService__Port": "5000"
+      }
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "Api__Service__Hostname": "localhost",
+        "Api__Service__Port": "8081",
+        "Api__IoTService__ServiceName": "IoTService",
+        "Api__IoTService__Hostname": "localhost",
+        "Api__IoTService__Port": "5000"
+      }
+    }
+  }
+}

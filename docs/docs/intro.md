@@ -27,9 +27,10 @@ platforms.
 - [EMQX](https://www.emqx.io/) - MQTT Broker
 - [Postgres](https://www.postgresql.org/) - Database
 
-#### Services
+#### Services & API
 
 - [.Net](https://dotnet.microsoft.com/en-us/) - Business logic and services
+- [Akka.Net](https://petabridge.com/) - Actor Model
 
 #### Web Application
 

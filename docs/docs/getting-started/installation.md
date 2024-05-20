@@ -16,9 +16,22 @@ Before installing Agrigate, be sure to have the following:
 
 ## Project Structure
 
-Coming Soon!
+```
+- README.md
+- docker-compose.yml
+- dc
+  - message-broker
+    - etc               # EMQX config files
+- src
+  - Agrigate.Api        # The public api for interacting with Agrigate
+  - Agrigate.Domain     # Models and data shared between projects
+  - Agrigate.IoT        # The IoT service
+- docs                  # This documentation site
+```
 
 ## Setup
+
+To start running Agrigate, complete the following steps:
 
 ### Clone the Repo
 
@@ -33,6 +46,7 @@ Coming soon!
 ### Run Docker-Compose
 
 ```
-cd ./agrigate
+cd ./Agrigate
+docker-compose build
 docker-compose up
 ```

@@ -1,0 +1,36 @@
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+WORKDIR /app
+EXPOSE 80
+EXPOSE 443
+EXPOSE 8080
+EXPOSE 8081
+
+ENV Api__Service__Hostname api
+ENV Api__Service__Port 8081
+ENV Api__IoTService__ServiceName IoTService
+ENV Api__IoTService__Hostname iot
+ENV Api__IoTService__Port 5000
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0 as build
+WORKDIR /src
+
+COPY ["Agrigate.Core/Agrigate.Core.csproj", "Agrigate.Core/"]
+COPY ["Agrigate.Domain/Agrigate.Domain.csproj", "Agrigate.Domain/"]
+COPY ["Agrigate.Api/Agrigate.Api.csproj", "Agrigate.Api/"]
+
+RUN dotnet restore "Agrigate.Api/Agrigate.Api.csproj"
+
+COPY ["Agrigate.Core/", "Agrigate.Core/"]
+COPY ["Agrigate.Domain/", "Agrigate.Domain/"]
+COPY ["Agrigate.Api/", "Agrigate.Api/"]
+
+WORKDIR "/src/Agrigate.Api"
+RUN dotnet build "Agrigate.Api.csproj" -c Release -o /app/build
+
+FROM build as publish
+RUN dotnet publish "Agrigate.Api.csproj" -c Release -o /app/publish
+
+FROM base as final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "Agrigate.Api.dll"]
