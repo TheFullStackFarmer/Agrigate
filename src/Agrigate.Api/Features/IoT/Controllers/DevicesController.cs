@@ -17,12 +17,11 @@ public class DevicesController : AgrigateController
     }
 
     /// <summary>
-    /// Registers a new device with the Agrigate platform
+    /// Retrieves a list of devices registered with Agrigate
     /// </summary>
-    /// <param name="registration"></param>
     /// <returns></returns>
-    [HttpPost]
-    public async Task<IActionResult> RegisterDevice(DeviceRegistration registration)
+    [HttpGet]
+    public async Task<IActionResult> GetDevices()
     {
         try 
         {
@@ -34,15 +33,5 @@ public class DevicesController : AgrigateController
             Console.WriteLine($"Exception: {ex.Message}");
             return Ok(ex.Message);
         }
-    }
-
-    /// <summary>
-    /// Retrieves a list of devices registered with Agrigate
-    /// </summary>
-    /// <returns></returns>
-    [HttpGet]
-    public IActionResult GetDevices()
-    {
-        return Ok();
     }
 }
