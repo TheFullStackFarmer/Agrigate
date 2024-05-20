@@ -1,5 +1,6 @@
 // https://github.com/akkadotnet/Akka.Hosting
 
+using Agrigate.Core.Configuration;
 using Agrigate.IoT.Actors;
 using Akka.Actor;
 using Akka.Hosting;
@@ -9,13 +10,16 @@ using Petabridge.Cmd.Remote;
 
 var builder = Host.CreateApplicationBuilder(args);
 
+var serviceConfig = new ServiceConfiguration();
+builder.Configuration.Bind("Service", serviceConfig);
+
 builder.Services.AddAkka("IoTService", builder =>
 {
     builder
         .WithRemoting(
             hostname: "0.0.0.0",
-            publicHostname: "iot",
-            port: 5000
+            publicHostname: serviceConfig.Hostname,
+            port: int.Parse(serviceConfig.Port)
         )
         .WithActors((system, registry) =>
         {
@@ -26,7 +30,7 @@ builder.Services.AddAkka("IoTService", builder =>
             new PetabridgeCmdOptions 
             {
                 Host = "127.0.0.1",
-                Port = 5001
+                Port = int.Parse(serviceConfig.CmdPort ?? "0")
             },
             cmd => 
             {

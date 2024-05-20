@@ -12,17 +12,20 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var apiConfig = new ApiConfiguration();
+builder.Configuration.Bind("Api", apiConfig);
+
 builder.Services.AddAkka("API", builder =>
 {
     builder
         .WithRemoting(
             hostname: "0.0.0.0",
-            publicHostname: "api",
-            port: 8081
+            publicHostname: apiConfig.Service.Hostname,
+            port: int.Parse(apiConfig.Service.Port)
         )
         .WithActors((system, registry) =>
         {
-            var supervisor = system.ActorOf(Props.Create(() => new ApiSupervisor()), "Supervisor");
+            var supervisor = system.ActorOf(Props.Create(() => new ApiSupervisor(apiConfig)), "Supervisor");
             registry.Register<ApiSupervisor>(supervisor);
         });
 });

@@ -5,7 +5,10 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "environmentVariables": {
-        "DOTNET_ENVIRONMENT": "Development"
+        "DOTNET_ENVIRONMENT": "Development",
+        "Service__Hostname": "localhost",
+        "Service__Port": "5000",
+        "Service__CmdPort": "5001"
       }
     }
   }

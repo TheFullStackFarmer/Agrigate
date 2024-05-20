@@ -10,11 +10,14 @@ namespace Agrigate.Api.Core;
 public class ApiSupervisor : ReceiveActor
 {
     private readonly ILoggingAdapter _log;
+    private readonly ApiConfiguration _configuration;
+
     private ActorSelection? _iotSupervisor;
 
-    public ApiSupervisor()
+    public ApiSupervisor(ApiConfiguration config)
     {
         _log = Logging.GetLogger(Context);
+        _configuration = config ?? throw new ArgumentNullException(nameof(config));
         ReceiveAnyAsync(Test);
     }
 
@@ -28,7 +31,8 @@ public class ApiSupervisor : ReceiveActor
     {
         _log.Info($"{nameof(InstantiateSupervisors)} running...");
 
-        _iotSupervisor = Context.ActorSelection("akka.tcp://IoTService@iot:5000/user/Supervisor");
+        var iotConfig = _configuration.IoTService;
+        _iotSupervisor = Context.ActorSelection($"akka.tcp://{iotConfig.ServiceName}@{iotConfig.Hostname}:{iotConfig.Port}/user/Supervisor");
 
         _log.Info($"{nameof(InstantiateSupervisors)} completed!");
     }

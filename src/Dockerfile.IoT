@@ -2,14 +2,20 @@ FROM mcr.microsoft.com/dotnet/runtime:8.0 AS base
 WORKDIR /app
 EXPOSE 5000
 
+ENV Service__Hostname iot
+ENV Service__Port 5000
+ENV Service__CmdPort 5001
+
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
+COPY ["Agrigate.Core/Agrigate.Core.csproj", "Agrigate.Core/"]
 COPY ["Agrigate.Domain/Agrigate.Domain.csproj", "Agrigate.Domain/"]
 COPY ["Agrigate.IoT/Agrigate.IoT.csproj", "Agrigate.IoT/"]
 
 RUN dotnet restore "Agrigate.IoT/Agrigate.IoT.csproj"
 
+COPY ["Agrigate.Core/", "Agrigate.Core/"]
 COPY ["Agrigate.Domain/", "Agrigate.Domain/"]
 COPY ["Agrigate.IoT/", "Agrigate.IoT/"]
 
