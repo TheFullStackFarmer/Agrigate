@@ -19,6 +19,9 @@ Before installing Agrigate, be sure to have the following:
 ```
 - README.md
 - docker-compose.yml
+- dc
+  - message-broker
+    - etc               # EMQX config files
 - src
   - Agrigate.Api        # The public api for interacting with Agrigate
   - Agrigate.Domain     # Models and data shared between projects

@@ -1,5 +1,3 @@
-// https://github.com/akkadotnet/Akka.Hosting
-
 using Agrigate.Core.Configuration;
 using Agrigate.IoT.Actors;
 using Akka.Actor;

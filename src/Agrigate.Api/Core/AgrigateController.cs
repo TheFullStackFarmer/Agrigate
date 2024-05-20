@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Agrigate.Api.Core;
 
+/// <summary>
+/// A base controller for the Agrigate API
+/// </summary>
 [ApiController]
 [Route("[controller]")]
 public abstract class AgrigateController : ControllerBase
