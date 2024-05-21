@@ -1,3 +1,4 @@
+using Agrigate.Core.Configuration;
 using Agrigate.Domain.Messages;
 using Agrigate.IoT.Actors.Devices;
 using Akka.Actor;
@@ -11,11 +12,15 @@ namespace Agrigate.IoT.Actors;
 public class IoTSupervisor : ReceiveActor
 {
     private readonly ILoggingAdapter _log;
+    private readonly ServiceConfiguration _configuration;
+
     private IActorRef? _deviceManager;
 
-    public IoTSupervisor()
+    public IoTSupervisor(ServiceConfiguration configuration)
     {
-        _log = Logging.GetLogger(Context);
+        _log = Logging.GetLogger(Context) ?? throw new ApplicationException("Unable to retrieve logger");
+        _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+
         Receive<TestMessage>(Ping);
     }
 
@@ -30,7 +35,7 @@ public class IoTSupervisor : ReceiveActor
         _log.Info($"{nameof(CreateManagers)} running...");
 
         _deviceManager = Context.ActorOf(
-            Props.Create(() => new DeviceManager()),
+            Props.Create(() => new DeviceManager(_configuration)),
             "DeviceManager"
         );
 

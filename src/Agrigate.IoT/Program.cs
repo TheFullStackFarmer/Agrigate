@@ -21,7 +21,7 @@ builder.Services.AddAkka("IoTService", builder =>
         )
         .WithActors((system, registry) =>
         {
-            var supervisor = system.ActorOf(Props.Create(() => new IoTSupervisor()), "Supervisor");
+            var supervisor = system.ActorOf(Props.Create(() => new IoTSupervisor(serviceConfig)), "Supervisor");
             registry.Register<IoTSupervisor>(supervisor);
         })
         .AddPetabridgeCmd(
