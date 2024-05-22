@@ -13,9 +13,9 @@ public abstract class AgrigateController : ControllerBase
 {
     protected readonly IActorRef ApiSupervisor;
 
-    public AgrigateController(ActorRegistry registry)
+    public AgrigateController(IRequiredActor<ApiSupervisor> supervisor)
     {
-        ApiSupervisor = registry.Get<ApiSupervisor>() 
-            ?? throw new ArgumentNullException("ApiSupervisor not available!");
+        ApiSupervisor = supervisor.ActorRef
+            ?? throw new ArgumentNullException(nameof(supervisor));
     }
 }

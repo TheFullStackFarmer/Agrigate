@@ -1,7 +1,11 @@
+using System.Collections.Concurrent;
 using Agrigate.Core.Configuration;
 using Agrigate.IoT.Domain.DTOs;
 using Akka.Actor;
+using Akka.DependencyInjection;
 using Akka.Event;
+using Akka.Util.Internal;
+using Microsoft.Extensions.Options;
 using MQTTnet;
 using MQTTnet.Client;
 using Newtonsoft.Json;
@@ -20,20 +24,27 @@ public class DeviceManager : ReceiveActor
     private IMqttClient? _mqttClient;
     private MqttClientOptions? _options;
 
-    public DeviceManager(ServiceConfiguration configuration)
+    private readonly IActorContext _context;
+    private ConcurrentDictionary<string, IActorRef> _deviceActors;
+
+    public DeviceManager(IOptions<ServiceConfiguration> options)
     {
         _log = Logging.GetLogger(Context) ?? throw new ApplicationException("Unable to retrieve logger");
-        _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+        _configuration = options.Value ?? throw new ArgumentNullException(nameof(options));
+
+        _deviceActors = new ConcurrentDictionary<string, IActorRef>();
+        _context = Context;
     }
 
     protected override void PreStart()
     {
         ConnectToBroker();
-        SubscribeToClientEvents();
+        SubscribeToConnectionEvents();
     }
 
     protected override void PostStop()
     {
+        DisconnectFromBroker();
         DisposeBrokerConnection();
     }
 
@@ -43,13 +54,13 @@ public class DeviceManager : ReceiveActor
         {
             _mqttFactory = new MqttFactory();
             _options = new MqttClientOptionsBuilder()
-                .WithClientId("device-manager")
+                .WithClientId("agrigate-device-manager")
                 .WithTcpServer(_configuration.MQTTHostname)
                 .Build();
             _mqttClient = _mqttFactory.CreateMqttClient();
 
             _mqttClient.DisconnectedAsync += Reconnect;
-            _mqttClient.ApplicationMessageReceivedAsync += HandleEvent;
+            _mqttClient.ApplicationMessageReceivedAsync += HandleConnectionEvent;
 
             _mqttClient.ConnectAsync(_options, CancellationToken.None).Wait();
         }
@@ -60,7 +71,7 @@ public class DeviceManager : ReceiveActor
         }
     }
 
-    private void SubscribeToClientEvents()
+    private void SubscribeToConnectionEvents()
     {
         if (_mqttFactory == null || _mqttClient == null)
         {
@@ -85,6 +96,25 @@ public class DeviceManager : ReceiveActor
         }
     }
 
+    private void DisconnectFromBroker()
+    {
+        try 
+        {
+            if (_mqttClient == null)
+                throw new ApplicationException("MQTT Client was not initialized");
+                
+            var disconnectOptions = new MqttClientDisconnectOptionsBuilder()
+                .WithReason(MqttClientDisconnectOptionsReason.NormalDisconnection)
+                .Build();
+
+            _mqttClient.DisconnectAsync(disconnectOptions, CancellationToken.None).Wait();
+        }
+        catch (Exception ex)
+        {
+            _log.Error($"Unable to disconnect from broker: {ex.Message}");
+        }
+    }
+
     private void DisposeBrokerConnection()
     {
         _mqttClient?.Dispose();
@@ -101,36 +131,54 @@ public class DeviceManager : ReceiveActor
             await _mqttClient.ConnectAsync(_options);
     }
 
-    private Task HandleEvent(MqttApplicationMessageReceivedEventArgs e)
+    private Task HandleConnectionEvent(MqttApplicationMessageReceivedEventArgs e)
     {
         try 
         {
-            _log.Info("Received application message");
             var message = System.Text.Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment);
             var connectionEvent = JsonConvert.DeserializeObject<BrokerConnectionEvent>(message) 
                 ?? throw new ApplicationException("Unable to parse connection event");
 
-            if (connectionEvent.ConnectedAt != null)
+            var clientId = connectionEvent.ClientId;
+
+            // Don't register a new actor for Agrigate actors
+            if (clientId.Contains("agrigate"))
+                return Task.CompletedTask;
+            
+            if (connectionEvent.DisconnecteAt != null) 
             {
-                // TODO: Create actor if it doesn't exist
-            }
-            else if (connectionEvent.DisconnecteAt != null) 
-            {
-                // TODO: Kill actor if it exists
-            }
-            else
-            {
-                _log.Warning($"Event not handled: {connectionEvent}");
+                if (!_deviceActors.TryGetValue(clientId, out var actorRef))
+                {
+                    _log.Warning($"{clientId} is not registered");
+                    return Task.CompletedTask;
+                }
+
+                _deviceActors.Remove(clientId, out actorRef);
+                actorRef.Tell(PoisonPill.Instance);
             }
 
-            // var timestamp = DateTimeOffset.FromUnixTimeMilliseconds(connectionEvent?.Timestamp ?? 0);
-            // DateTime.TryParse(connectionEvent.ConnectedAt, out var time))
-            return Task.CompletedTask;
+            else if (connectionEvent.ConnectedAt != null)
+            {
+                if (_mqttFactory == null)
+                    throw new ApplicationException("MQTT Factory is unavailable");
+
+                if (_deviceActors.TryGetValue(clientId, out var actorRef))
+                {
+                    _log.Warning($"{clientId} already registered with {actorRef}");
+                    return Task.CompletedTask;
+                }
+                
+                var deviceProps = DependencyResolver.For(_context.System).Props<Device>(clientId, _mqttFactory);
+                var deviceActor = _context.ActorOf(deviceProps, $"Device-{clientId}");
+
+                _deviceActors.AddOrSet(clientId, deviceActor);
+            }
         }
         catch (Exception ex)
         {
-            _log.Error($"Unable to process application message: {ex.Message}");
-            return Task.CompletedTask;
+            _log.Error($"Unable to process connection event: {ex.Message}");
         }
+
+        return Task.CompletedTask;
     }
 }

@@ -29,7 +29,8 @@ services:
       context: ./src
       dockerfile: Dockerfile.IoT
     depends_on:
-      - message-broker
+      message-broker:
+        condition: service_healthy
 
   api:
     build:

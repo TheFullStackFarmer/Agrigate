@@ -1,4 +1,3 @@
-using Agrigate.Api.Controllers.Features.IoT.Models;
 using Agrigate.Api.Core;
 using Agrigate.Domain.Messages;
 using Akka.Actor;
@@ -12,7 +11,8 @@ namespace Agrigate.Api.Controllers.Features.IoT.Controllers;
 /// </summary>
 public class DevicesController : AgrigateController
 {
-    public DevicesController(ActorRegistry registry) : base(registry)
+    public DevicesController(IRequiredActor<ApiSupervisor> supervisor) 
+        : base(supervisor)
     {
     }
 
