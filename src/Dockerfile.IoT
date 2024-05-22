@@ -1,6 +1,7 @@
 FROM mcr.microsoft.com/dotnet/runtime:8.0 AS base
 WORKDIR /app
 EXPOSE 5000
+EXPOSE 5001
 
 ENV Service__Hostname iot
 ENV Service__Port 5000

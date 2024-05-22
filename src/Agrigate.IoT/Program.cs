@@ -34,7 +34,7 @@ builder.Services.AddAkka("IoTService", builder =>
         .AddPetabridgeCmd(
             new PetabridgeCmdOptions 
             {
-                Host = "127.0.0.1",
+                Host = "0.0.0.0",
                 Port = int.Parse(serviceConfig.CmdPort ?? "0")
             },
             cmd => 

@@ -43,7 +43,7 @@ public class Device : ReceiveActor
     protected override void PostStop()
     {
         DisconnectFromBroker();
-        // DisposeBrokerConnection();
+        DisposeBrokerConnection();
         _log.Info($"Device {_deviceId} terminated.");
     }
 
@@ -88,12 +88,10 @@ public class Device : ReceiveActor
         }
     }
 
-    // Disposing the client after DisconnectAsync regularly throws 
-    // "System.ObjectDisposedException" - Is disconnect disposing for us?
-    // private void DisposeBrokerConnection()
-    // {
-    //     _mqttClient?.Dispose();
-    // }
+    private void DisposeBrokerConnection()
+    {
+        _mqttClient?.Dispose();
+    }
 
     private void SubscribeToDeviceEvents()
     {

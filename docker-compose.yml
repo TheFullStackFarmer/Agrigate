@@ -31,6 +31,8 @@ services:
     depends_on:
       message-broker:
         condition: service_healthy
+    ports:
+      - 5001:5001
 
   api:
     build:
