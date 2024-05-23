@@ -1,10 +1,8 @@
-# Services
+# Service Overview
 
 The main business logic for Agrigate occurs in the service layer, which is made
 up of a variety of microservices that are responsible for one aspect of
 Agrigate, such as Authentication, IoT, Notifications, etc.
-
-## Overview
 
 Here, you can see which services interact with each other and the message broker
 at a high level.
@@ -21,7 +19,7 @@ block-beta
     iot --> broker
 ```
 
-## Service Components
+## Components
 
 Each service consists of the following components:
 
