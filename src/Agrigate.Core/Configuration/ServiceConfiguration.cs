@@ -24,4 +24,9 @@ public class ServiceConfiguration
     /// The port used by Petabridge.CMD
     /// </summary>
     public string? CmdPort { get; set; }
+
+    /// <summary>
+    /// The host name of the MQTT Broker
+    /// </summary>
+    public string? MQTTHostname { get; set; }
 }

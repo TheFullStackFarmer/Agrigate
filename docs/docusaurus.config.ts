@@ -73,12 +73,12 @@ const config: Config = {
           position: "left",
           label: "Design",
         },
-        // {
-        //   type: "docSidebar",
-        //   sidebarId: "guides",
-        //   position: "left",
-        //   label: "Guides",
-        // },
+        {
+          type: "docSidebar",
+          sidebarId: "guides",
+          position: "left",
+          label: "Guides",
+        },
         // {
         //   type: "docSidebar",
         //   sidebarId: "releases",

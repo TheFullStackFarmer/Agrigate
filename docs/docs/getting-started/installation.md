@@ -39,10 +39,6 @@ To start running Agrigate, complete the following steps:
 git clone https://github.com/TheFullStackFarmer/Agrigate.git
 ```
 
-### Update Configuration
-
-Coming soon!
-
 ### Run Docker-Compose
 
 ```
@@ -50,3 +46,12 @@ cd ./Agrigate
 docker-compose build
 docker-compose up
 ```
+
+At this point, you should see an MQTT broker, the IoT service, and API running.
+You can access the MQTT broker by navigating to http://localhost:18083 and
+logging in with:
+
+- Username: admin
+- Password: public
+
+You'll be promted to change the password when you log in

@@ -1,0 +1,139 @@
+using Agrigate.Core.Configuration;
+using Akka.Actor;
+using Akka.Event;
+using Microsoft.Extensions.Options;
+using MQTTnet;
+using MQTTnet.Client;
+
+/// <summary>
+/// A base actor that contains logic for connecting to an MQTT broker
+/// </summary>
+public abstract class MQTTActor : ReceiveActor
+{
+    protected readonly ILoggingAdapter Log;
+    protected readonly ServiceConfiguration Configuration;
+
+    protected MqttFactory? MqttFactory;
+    protected IMqttClient? MqttClient;
+    private MqttClientOptions? _options;
+
+    public MQTTActor(IOptions<ServiceConfiguration> options)
+    {
+        Log = Logging.GetLogger(Context) ?? throw new ApplicationException("Unable to retrieve logger");
+        Configuration = options.Value ?? throw new ArgumentNullException(nameof(options));
+    }
+
+    protected override void PostStop()
+    {
+        DisconnectFromBroker();
+        DisposeBrokerConnection();
+    }
+
+    /// <summary>
+    /// Connects to the MQTT broker with the given client id and message handler
+    /// </summary>
+    /// <param name="clientId">The clientId to use when connecting to the broker</param>
+    /// <param name="messageHandler">The event handler called when receiving a message</param>
+    protected void ConnectToBroker(
+        string clientId, 
+        Func<MqttApplicationMessageReceivedEventArgs, Task>? messageHandler = null
+    )
+    {
+        try 
+        {
+            MqttFactory = new MqttFactory();
+            _options = new MqttClientOptionsBuilder()
+                .WithClientId(clientId)
+                .WithTcpServer(Configuration.MQTTHostname)
+                .Build();
+            MqttClient = MqttFactory.CreateMqttClient();
+
+            MqttClient.DisconnectedAsync += Reconnect;
+
+            if (messageHandler != null)
+                MqttClient.ApplicationMessageReceivedAsync += messageHandler;
+
+            MqttClient.ConnectAsync(_options, CancellationToken.None).Wait();
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Unable to connect to broker: {ex.Message}");
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Subscribes to a particular topic
+    /// </summary>
+    /// <exception cref="ApplicationException"></exception>
+    protected void SubscribeToTopic(string topic)
+    {
+        if (MqttFactory == null || MqttClient == null)
+        {
+            var message = "MQTT Factory or Client failed to initialize";
+            Log.Error(message);
+            throw new ApplicationException(message);
+        }
+
+        try
+        {
+            var subscriptionOptions = MqttFactory
+                .CreateSubscribeOptionsBuilder()
+                .WithTopicFilter(f => { f.WithTopic(topic); })
+                .Build();
+
+            MqttClient.SubscribeAsync(subscriptionOptions, CancellationToken.None).Wait();
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Unable to subscribe to client events: {ex.Message}");
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Attempts to reconnect to the message broker
+    /// </summary>
+    /// <param name="e"></param>
+    /// <returns></returns>
+    private async Task Reconnect(MqttClientDisconnectedEventArgs e)
+    {
+        if (MqttClient == null || _options == null)
+            return;
+
+        if (e.ClientWasConnected)
+            await MqttClient.ConnectAsync(_options);
+    }
+
+    /// <summary>
+    /// Cleanly disconnect from the MQTT broker
+    /// </summary>
+    /// <exception cref="ApplicationException"></exception>
+    private void DisconnectFromBroker()
+    {
+        try 
+        {
+            if (MqttClient == null)
+                throw new ApplicationException("MQTT Client was not initialized");
+                
+            var disconnectOptions = new MqttClientDisconnectOptionsBuilder()
+                .WithReason(MqttClientDisconnectOptionsReason.NormalDisconnection)
+                .Build();
+
+            MqttClient.DisconnectAsync(disconnectOptions, CancellationToken.None).Wait();
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Unable to disconnect from broker: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Disposes of the MQTT client, if it exists
+    /// </summary>
+    private void DisposeBrokerConnection()
+    {
+        MqttClient?.Dispose();
+    }
+
+}
