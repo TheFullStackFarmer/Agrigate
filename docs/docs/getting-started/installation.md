@@ -39,6 +39,42 @@ To start running Agrigate, complete the following steps:
 git clone https://github.com/TheFullStackFarmer/Agrigate.git
 ```
 
+### Configuration
+
+Agrigate is configured to use the following ports by default:
+
+#### MQTT
+
+| Item             | Port  | Exposed Docker Port |
+| ---------------- | ----- | ------------------- |
+| MQTT             | 1883  | 1883                |
+| MQTT / SSL       | 8883  | 8883                |
+| MQTT / Websocket | 8083  | 8083                |
+| Dashboard        | 18083 | 18083               |
+
+#### Database
+
+| Item       | Port | Exposed Docker Port |
+| ---------- | ---- | ------------------- |
+| PostgreSQL | 5432 | 8000                |
+
+#### API
+
+| Item            | Port | Exposed Docker Port |
+| --------------- | ---- | ------------------- |
+| Api Akka.Remote | 8081 |                     |
+| HTTP Web API    | 8080 | 8080                |
+
+#### Services
+
+| Item               | Port | Exposed Docker Port |
+| ------------------ | ---- | ------------------- |
+| IoT Akka.Remote    | 5000 |                     |
+| IoT Petabridge.CMD | 5001 | 5001                |
+
+These can be changed to whatever you want via the `docker-compose.yml` and
+`DockerFile.{Service}` files.
+
 ### Run Docker-Compose
 
 ```
