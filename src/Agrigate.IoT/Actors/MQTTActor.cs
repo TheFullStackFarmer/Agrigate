@@ -1,9 +1,11 @@
 using Agrigate.Core.Configuration;
+using Agrigate.IoT.Domain.DTOs;
 using Akka.Actor;
 using Akka.Event;
 using Microsoft.Extensions.Options;
 using MQTTnet;
 using MQTTnet.Client;
+using Newtonsoft.Json;
 
 /// <summary>
 /// A base actor that contains logic for connecting to an MQTT broker
@@ -88,6 +90,34 @@ public abstract class MQTTActor : ReceiveActor
         {
             Log.Error($"Unable to subscribe to client events: {ex.Message}");
             throw;
+        }
+    }
+
+    /// <summary>
+    /// Attempts to publish a message to the MQTT Broker
+    /// </summary>
+    /// <param name="topic">The topic that should be published to</param>
+    /// <param name="payload">The payload</param>
+    protected void PublishMessage(string topic, DeviceMessage payload)
+    {
+        if (MqttClient == null)
+        {
+            Log.Error($"Unable to publish message. MQTTClient not initialized");
+            return;
+        }
+
+        try
+        {
+            var message = new MqttApplicationMessageBuilder()
+                .WithTopic(topic)
+                .WithPayload(JsonConvert.SerializeObject(payload))
+                .Build();
+
+            MqttClient.PublishAsync(message, CancellationToken.None).Wait();
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error publishing message: {ex.Message}");
         }
     }
 

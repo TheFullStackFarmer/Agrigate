@@ -1,4 +1,5 @@
 using Agrigate.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -8,6 +9,7 @@ namespace Agrigate.IoT.Domain.Entities;
 /// The representation of a physical device that can communicate with Agrigate
 /// </summary>
 [Table(nameof(Device))]
+[Index(nameof(DeviceId), IsUnique = true)]
 public class Device : EntityBase
 {
     [Key]
@@ -15,7 +17,7 @@ public class Device : EntityBase
 
     /// <summary>
     /// A key that should be supplied by the device when making requests to 
-    /// identify itself
+    /// verify its identify
     /// </summary>
     public Guid DeviceKey { get; set; }
 

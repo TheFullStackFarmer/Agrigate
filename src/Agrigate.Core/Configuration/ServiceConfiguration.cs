@@ -29,4 +29,9 @@ public class ServiceConfiguration
     /// The host name of the MQTT Broker
     /// </summary>
     public string? MQTTHostname { get; set; }
+
+    /// <summary>
+    /// The connection string for the service's database
+    /// </summary>
+    public string? DatabaseConnection { get; set; }
 }

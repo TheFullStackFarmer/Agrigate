@@ -24,6 +24,16 @@ services:
       - 8883:8883
       - 18083:18083
 
+  database:
+    image: postgres
+    restart: always
+    environment:
+      - "POSTGRES_PASSWORD=pg@dm1n"
+    volumes:
+      - ./dc/database/data:/var/lib/postgresql/data
+    ports:
+      - 8000:5432
+
   iot:
     build:
       context: ./src
@@ -31,6 +41,8 @@ services:
     depends_on:
       message-broker:
         condition: service_healthy
+      database:
+        condition: service_started
     ports:
       - 5001:5001
 

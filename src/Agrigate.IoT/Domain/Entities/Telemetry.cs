@@ -14,6 +14,11 @@ public class Telemetry : EntityBase
     public long Id { get; set; }
 
     /// <summary>
+    /// The Id of the device to which the telemetry reading belongs
+    /// </summary>
+    public int DeviceId { get; set; }
+
+    /// <summary>
     /// The time at which the telemetry was recorded
     /// </summary>
     public DateTimeOffset Timestamp { get; set; }
