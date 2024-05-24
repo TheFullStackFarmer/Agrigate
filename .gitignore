@@ -1,6 +1,7 @@
 # Docker-Compose volumes
 dc/message-broker/data
 dc/message-broker/logs
+dc/database/data/
 
 # VS build directories
 bin/

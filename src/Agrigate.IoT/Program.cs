@@ -1,18 +1,34 @@
 using Agrigate.Core.Configuration;
 using Agrigate.IoT.Actors;
-using Akka.Actor;
+using Agrigate.IoT.Domain.Contexts;
 using Akka.Hosting;
 using Akka.Remote.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Petabridge.Cmd.Host;
 using Petabridge.Cmd.Remote;
 
 var builder = Host.CreateApplicationBuilder(args);
+
+//////////////////////////////////////////
+//          Configure Settings          //
+//////////////////////////////////////////
 
 var serviceConfig = new ServiceConfiguration();
 builder.Configuration.Bind("Service", serviceConfig);
 
 builder.Services.Configure<ServiceConfiguration>(
     builder.Configuration.GetSection("Service"));
+
+//////////////////////////////////////////
+//            Database Setup            //
+//////////////////////////////////////////
+
+builder.Services.AddDbContextFactory<IoTContext>(options =>
+    options.UseNpgsql(serviceConfig.DatabaseConnection));
+
+//////////////////////////////////////////
+//               Akka.Net               //
+//////////////////////////////////////////
 
 builder.Services.AddAkka("IoTService", builder =>
 {
@@ -22,13 +38,10 @@ builder.Services.AddAkka("IoTService", builder =>
             publicHostname: serviceConfig.Hostname,
             port: int.Parse(serviceConfig.Port)
         )
-        .WithActors((system, registry) =>
+        .WithActors((system, registry, resolver) =>
         {
-            var supervisor = system.ActorOf(Props.Create(
-                () => new IoTSupervisor()), 
-                "Supervisor"
-            );
-
+            var supervisorProps = resolver.Props<IoTSupervisor>();
+            var supervisor = system.ActorOf(supervisorProps, "Supervisor");
             registry.Register<IoTSupervisor>(supervisor);
         })
         .AddPetabridgeCmd(

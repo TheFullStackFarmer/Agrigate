@@ -22,7 +22,8 @@ block-beta
     space:1 supervisor(("Supervisor")) space:1
     space:1 manager(("Device Manager")) space:1
     device(("Device 1")) device2(("Device 2")) device3(("Device 3"))
-    broker["MQTT Broker"]:3
+    broker(["MQTT Broker"]):3
+    pdevice(["Physical Device 1"]) pdevice2(["Physical Device 2"]) pdevice3(["Physical Device 3"])
 
     supervisor --> manager
     manager --> device
@@ -31,4 +32,61 @@ block-beta
     device --> broker
     device2 --> broker
     device3 --> broker
+    broker --> device
+    broker --> device2
+    broker --> device3
+    pdevice --> broker
+    pdevice2 --> broker
+    pdevice3 --> broker
+    broker --> pdevice
+    broker --> pdevice2
+    broker --> pdevice3
+```
+
+## Data Model
+
+The IoT service utilizes the following data model
+
+- **Device**: A physical device that has connected to the Agrigate platform
+- **DeviceMethod**: A method that is exposed on the device and can be initiated
+  remotely by Agrigate
+- **Telemetry**: Sensor or other data received from the device
+
+```mermaid
+erDiagram
+    Device ||--o{ DeviceMethod : Contains
+    Device ||--o{ Telemetry : Records
+    Device {
+        int Id
+        Guid DeviceKey
+        string DeviceId
+        string Model
+        string SerialNumber
+        DateTimeOffset LastConnection
+    }
+    DeviceMethod {
+        int Id
+        int DeviceId
+        string Name
+        string Description
+        string Parameters
+    }
+    Telemetry {
+        long Id
+        int DeviceId
+        DateTimeOffset Timestamp
+        string Key
+        double Value
+        bool BoolValue
+        string StringValue
+    }
+    Log {
+        long Id
+        DateTimeOffset Timestamp
+        int LogLevel
+        string Message
+        string Source
+        string Data
+        string StackTrace
+    }
 ```

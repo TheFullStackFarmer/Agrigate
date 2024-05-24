@@ -7,7 +7,7 @@ namespace Agrigate.IoT.Domain.Entities;
 /// <summary>
 /// The definition of a method that can be executed on a device
 /// </summary>
-[Table(nameof(Device))]
+[Table(nameof(DeviceMethod))]
 public class DeviceMethod : EntityBase
 {
     [Key]

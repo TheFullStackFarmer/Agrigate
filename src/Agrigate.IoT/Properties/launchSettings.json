@@ -9,7 +9,8 @@
         "Service__Hostname": "localhost",
         "Service__Port": "5000",
         "Service__CmdPort": "5001",
-        "Service__MQTTHostname": "localhost"
+        "Service__MQTTHostname": "localhost",
+        "Service__DatabaseConnection": "Host=localhost;Database=iot-service;Username=iot-service;Password=i0ts3rv1c3"
       }
     }
   }

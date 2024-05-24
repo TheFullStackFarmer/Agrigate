@@ -3,7 +3,7 @@
 The [EMQX](https://www.emqx.io/) MQTT broker is the hub of the IoT service.
 Devices connect to the broker, which can then be managed from within Agrigate.
 
-## Connecting
+## Connect to the Broker
 
 After starting Agrigate, you can connect to the broker by navigating to
 http://localhost:18083. From there, you can log in with the default username /
