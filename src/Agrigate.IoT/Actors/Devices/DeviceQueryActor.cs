@@ -1,3 +1,4 @@
+using Agrigate.Domain.DTOs.IoT;
 using Agrigate.IoT.Domain.Contexts;
 using Agrigate.IoT.Domain.Messages;
 using Akka.Actor;
@@ -18,6 +19,7 @@ public class DeviceQueryActor : ReceiveActor
         _dbFactory = dbFactory ?? throw new ArgumentNullException(nameof(dbFactory));
 
         Receive<DeviceConnect>(HandleDeviceConnect);
+        Receive<DeviceRetrieval>(HandleDeviceRetrieval);
     }
 
     /// <summary>
@@ -45,6 +47,33 @@ public class DeviceQueryActor : ReceiveActor
         db.SaveChanges();
 
         Sender.Tell(device);
+        Self.Tell(PoisonPill.Instance);
+    }
+
+    /// <summary>
+    /// Retrieves all devices that have connected to Agrigate, and their current
+    /// online status
+    /// </summary>
+    /// <param name="message">A message containing the currently online 
+    /// devices</param>
+    public void HandleDeviceRetrieval(DeviceRetrieval message)
+    {
+        var results = new List<DeviceWithStatus>();
+        using var db = _dbFactory.CreateDbContext();
+
+        var allDevices = db.Devices.AsNoTracking().ToList();
+        foreach (var device in allDevices)
+        {
+            var onlineDevice = message.ActiveDevices.Contains(device.DeviceId);
+            results.Add(new DeviceWithStatus
+            {
+                DeviceId = device.DeviceId,
+                LastConnection = device.LastConnection,
+                Online = onlineDevice
+            });
+        }
+
+        Sender.Tell(results);
         Self.Tell(PoisonPill.Instance);
     }
 }

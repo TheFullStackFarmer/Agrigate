@@ -1,6 +1,8 @@
 using Agrigate.Core.Configuration;
+using Agrigate.IoT.Actors.Devices;
 using Agrigate.IoT.Domain.DTOs;
 using Akka.Actor;
+using Akka.DependencyInjection;
 using Akka.Event;
 using Microsoft.Extensions.Options;
 using MQTTnet;
@@ -122,6 +124,22 @@ public abstract class MQTTActor : ReceiveActor
     }
 
     /// <summary>
+    /// Asks the DeviceQueryActor a given message
+    /// </summary>
+    /// <typeparam name="TMessage">The type of message being sent to the 
+    /// DeviceQueryActor</typeparam>
+    /// <param name="sender">The original sender of the request</param>
+    /// <param name="message">The message to send the DeviceQueryActor</param>
+    protected static void AskFor<TMessage>(TMessage message)
+        where TMessage : class
+    {
+        var queryProps = DependencyResolver.For(Context.System).Props<DeviceQueryActor>();
+        var queryHandler = Context.ActorOf(queryProps);
+
+        queryHandler.Forward(message);
+    }
+
+    /// <summary>
     /// Attempts to reconnect to the message broker
     /// </summary>
     /// <param name="e"></param>
@@ -165,5 +183,4 @@ public abstract class MQTTActor : ReceiveActor
     {
         MqttClient?.Dispose();
     }
-
 }

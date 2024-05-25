@@ -1,6 +1,8 @@
 using System.Collections.Concurrent;
 using Agrigate.Core.Configuration;
+using Agrigate.Domain.Messages.IoT;
 using Agrigate.IoT.Domain.DTOs;
+using Agrigate.IoT.Domain.Messages;
 using Akka.Actor;
 using Akka.DependencyInjection;
 using Akka.Event;
@@ -23,6 +25,8 @@ public class DeviceManager : MQTTActor
     {
         _deviceActors = new ConcurrentDictionary<string, IActorRef>();
         _context = Context;
+
+        Receive<GetDevices>(HandleGetDevices);
     }
 
     protected override void PreStart()
@@ -80,5 +84,11 @@ public class DeviceManager : MQTTActor
         }
 
         return Task.CompletedTask;
+    }
+
+    public void HandleGetDevices(GetDevices message)
+    {
+        var connectedDevices = _deviceActors.Keys.ToList();
+        AskFor(new DeviceRetrieval(connectedDevices));
     }
 }

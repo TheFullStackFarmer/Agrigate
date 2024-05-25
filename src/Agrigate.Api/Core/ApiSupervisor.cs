@@ -1,4 +1,5 @@
-using Agrigate.Domain.Messages;
+using Agrigate.Core;
+using Agrigate.Domain.Messages.IoT;
 using Akka.Actor;
 using Akka.Event;
 
@@ -18,7 +19,8 @@ public class ApiSupervisor : ReceiveActor
     {
         _log = Logging.GetLogger(Context);
         _configuration = config ?? throw new ArgumentNullException(nameof(config));
-        ReceiveAnyAsync(Test);
+
+        ReceiveAny(RequestHandler);
     }
 
     protected override void PreStart()
@@ -37,15 +39,30 @@ public class ApiSupervisor : ReceiveActor
         _log.Info($"{nameof(InstantiateSupervisors)} completed!");
     }
 
-    private async Task Test(object message)
+    private void RequestHandler(object message)
     {
-        _log.Info($"{nameof(ApiSupervisor)} received message: {message}");
-
-        // TODO: Use PipeTo, not await since this blocks any further action by
-        // the actor
-        var result = await _iotSupervisor.Ask(new TestMessage("Testing a message..."));
-
-        _log.Info($"{nameof(ApiSupervisor)} received response: {result}");
-        Sender.Tell(result);
+        try
+        {
+            switch (message)
+            {
+                case IIoTMessage:
+                    _iotSupervisor.Ask(
+                        message, 
+                        Constants.MaxActorWaitTime
+                    ).PipeTo(Sender);
+                    break;
+                default:
+                    var messageType = message.GetType().Name;
+                    _log.Warning($"Unhandled message of type {messageType}");
+                    Sender.Tell(new ApplicationException("Unhandled Message Type"));
+                    break;
+            }
+        }
+        catch (Exception ex)
+        {
+            var error = $"Error making request: {ex.Message}";
+            _log.Error(error);
+            Sender.Tell(new ApplicationException(error));
+        }
     }
 }

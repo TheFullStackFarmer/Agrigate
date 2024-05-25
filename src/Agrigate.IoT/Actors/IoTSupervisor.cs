@@ -1,4 +1,5 @@
-using Agrigate.Domain.Messages;
+using Agrigate.Core;
+using Agrigate.Domain.Messages.IoT;
 using Agrigate.IoT.Actors.Devices;
 using Agrigate.IoT.Domain.Contexts;
 using Akka.Actor;
@@ -23,7 +24,7 @@ public class IoTSupervisor : ReceiveActor
         _log = Logging.GetLogger(Context) ?? throw new ApplicationException("Unable to retrieve logger");
         _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 
-        Receive<TestMessage>(Ping);
+        ReceiveAny(RequestHandler);
     }
 
     protected override void PreStart()
@@ -66,9 +67,18 @@ public class IoTSupervisor : ReceiveActor
         _log.Info($"{nameof(CreateManagers)} completed!");        
     }
 
-    private void Ping(object message)
+    private void RequestHandler(object message)
     {
-        _log.Info($"{nameof(IoTSupervisor)} received message: {message}");
-        Sender.Tell("Ping.Pong!");
+        switch (message)
+        {
+            case IDeviceMessage:
+                _deviceManager.Forward(message);
+                break;
+            default:
+                var messageType = message.GetType().Name;
+                _log.Warning($"Unhandled message of type {messageType}");
+                Sender.Tell(new ApplicationException("Unhandled Message Type"));
+                break;
+        }
     }
 }
