@@ -1,5 +1,5 @@
 using Agrigate.Api.Core;
-using Agrigate.Domain.Messages;
+using Agrigate.Core;
 using Akka.Actor;
 using Akka.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -25,13 +25,19 @@ public class DevicesController : AgrigateController
     {
         try 
         {
-            var result = await ApiSupervisor.Ask(new TestMessage("This is a test message"), TimeSpan.FromSeconds(5));
-            return Ok(result);
+            var result = await ApiSupervisor.Ask(
+                new Domain.Messages.IoT.GetDevices(), 
+                Constants.MaxActorWaitTime
+            );
+
+            if (result is Exception exception)
+                throw exception;
+
+            return Success(result);
         }
         catch (Exception ex) 
         {
-            Console.WriteLine($"Exception: {ex.Message}");
-            return Ok(ex.Message);
+            return Failure($"Unable to retrieve devices: {ex.Message}");
         }
     }
 }

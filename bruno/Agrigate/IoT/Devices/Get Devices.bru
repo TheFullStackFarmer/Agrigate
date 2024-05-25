@@ -1,0 +1,15 @@
+meta {
+  name: Get Devices
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:8080/Devices
+  body: none
+  auth: none
+}
+
+docs {
+  Retrieves a list of devices and whether they are currently connected to the Agrigate Platform
+}

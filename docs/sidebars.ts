@@ -20,7 +20,7 @@ const sidebars: SidebarsConfig = {
       link: {
         type: "generated-index",
       },
-      items: ["getting-started/installation"],
+      items: ["getting-started/installation", "getting-started/api"],
     },
   ],
   design: [

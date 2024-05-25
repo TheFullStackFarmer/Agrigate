@@ -1,3 +1,4 @@
+using Agrigate.Core;
 using Agrigate.Core.Configuration;
 using Agrigate.IoT.Domain.DTOs;
 using Agrigate.IoT.Domain.Messages;
@@ -65,7 +66,7 @@ public class Device : MQTTActor, IWithTimers
         var queryHandler = Context.ActorOf(queryProps);
 
         Domain.Entities.Device? device = queryHandler
-            .Ask(new DeviceConnect(_deviceId), TimeSpan.FromSeconds(5))
+            .Ask(new DeviceConnect(_deviceId), Constants.MaxActorWaitTime)
             .GetAwaiter()
             .GetResult() as Domain.Entities.Device;
 
