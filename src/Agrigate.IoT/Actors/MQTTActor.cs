@@ -16,6 +16,7 @@ public abstract class MQTTActor : ReceiveActor
 {
     protected readonly ILoggingAdapter Log;
     protected readonly ServiceConfiguration Configuration;
+    protected readonly IUntypedActorContext ActorContext;
 
     protected MqttFactory? MqttFactory;
     protected IMqttClient? MqttClient;
@@ -25,6 +26,7 @@ public abstract class MQTTActor : ReceiveActor
     {
         Log = Logging.GetLogger(Context) ?? throw new ApplicationException("Unable to retrieve logger");
         Configuration = options.Value ?? throw new ArgumentNullException(nameof(options));
+        ActorContext = Context;
     }
 
     protected override void PostStop()

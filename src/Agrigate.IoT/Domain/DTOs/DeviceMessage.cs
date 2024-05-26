@@ -14,20 +14,14 @@ public enum DeviceMessageType
     DeviceKey = 1,
 
     /// <summary>
-    /// The message contains telemetry data
-    /// </summary>
-    Telemetry = 2,
-
-    /// <summary>
     /// The message is meant to invoke a particular method
     /// </summary>
-    MethodCall = 3,
+    MethodCall = 2,
 }
 
 
 /// <summary>
-/// A message published to physical devices from
-/// a Device Actor
+/// A message published to physical devices from a Device Actor
 /// </summary>
 public class DeviceMessage
 {
@@ -43,12 +37,6 @@ public class DeviceMessage
     public Guid MessageId { get; set; }
 
     /// <summary>
-    /// A unique Id representing the original message's MessageId, if this 
-    /// message is a response to a prior message
-    /// </summary>
-    public Guid? ReferenceId { get; set; }
-
-    /// <summary>
     /// The type of message being sent
     /// </summary>
     public DeviceMessageType MessageType { get; set; }
@@ -62,7 +50,7 @@ public class DeviceMessage
     /// The payload that should be sent. Examples could be a regular string, 
     /// stringified number, or serialized object
     /// </summary>
-    public string? Payload { get; set; }
+    public object? Payload { get; set; }
 
     /// <summary>
     /// Whether or not the sender of the message expects a response

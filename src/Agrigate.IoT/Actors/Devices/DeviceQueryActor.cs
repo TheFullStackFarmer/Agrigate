@@ -1,5 +1,6 @@
 using Agrigate.Domain.DTOs.IoT;
 using Agrigate.IoT.Domain.Contexts;
+using Agrigate.IoT.Domain.Entities;
 using Agrigate.IoT.Domain.Messages;
 using Akka.Actor;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,7 @@ public class DeviceQueryActor : ReceiveActor
 
         Receive<DeviceConnect>(HandleDeviceConnect);
         Receive<DeviceRetrieval>(HandleDeviceRetrieval);
+        Receive<TelemetryReceived>(HandleTelemetryReceived);
     }
 
     /// <summary>
@@ -27,7 +29,7 @@ public class DeviceQueryActor : ReceiveActor
     /// otherwise creates a new device
     /// </summary>
     /// <param name="message">A message containing a deviceId</param>
-    public void HandleDeviceConnect(DeviceConnect message)
+    private void HandleDeviceConnect(DeviceConnect message)
     {
         var connectionTime = DateTimeOffset.UtcNow;
         using var db = _dbFactory.CreateDbContext();
@@ -56,7 +58,7 @@ public class DeviceQueryActor : ReceiveActor
     /// </summary>
     /// <param name="message">A message containing the currently online 
     /// devices</param>
-    public void HandleDeviceRetrieval(DeviceRetrieval message)
+    private void HandleDeviceRetrieval(DeviceRetrieval message)
     {
         var results = new List<DeviceWithStatus>();
         using var db = _dbFactory.CreateDbContext();
@@ -74,6 +76,41 @@ public class DeviceQueryActor : ReceiveActor
         }
 
         Sender.Tell(results);
+        Self.Tell(PoisonPill.Instance);
+    }
+
+    /// <summary>
+    /// Records telemetry received by a device
+    /// </summary>
+    /// <param name="message">A message containing the telemetry to save</param>
+    private void HandleTelemetryReceived(TelemetryReceived message) 
+    {
+        using var db = _dbFactory.CreateDbContext();
+
+        var device = db.Devices.AsNoTracking()
+            .FirstOrDefault(device => device.DeviceId == message.DeviceId);
+        
+        if (device == null)
+            return;
+
+        var now = DateTimeOffset.UtcNow;
+        var newTelemetry = new List<Telemetry>();
+        foreach(var telemetry in message.Telemetry)
+        {
+            newTelemetry.Add(new Telemetry
+            {
+                DeviceId = device.Id,
+                Timestamp = telemetry.Timestamp,
+                Key = telemetry.Key,
+                Value = telemetry.Value,
+                Created = now,
+                Modified = now
+            });
+        }
+
+        db.AddRange(newTelemetry);
+        db.SaveChanges();
+        
         Self.Tell(PoisonPill.Instance);
     }
 }

@@ -18,13 +18,11 @@ namespace Agrigate.IoT.Actors.Devices;
 /// </summary>
 public class DeviceManager : MQTTActor
 {
-    private readonly IActorContext _context;
     private ConcurrentDictionary<string, IActorRef> _deviceActors;
 
     public DeviceManager(IOptions<ServiceConfiguration> options) : base(options)
     {
         _deviceActors = new ConcurrentDictionary<string, IActorRef>();
-        _context = Context;
 
         Receive<GetDevices>(HandleGetDevices);
     }
@@ -72,8 +70,8 @@ public class DeviceManager : MQTTActor
                     return Task.CompletedTask;
                 }
                 
-                var deviceProps = DependencyResolver.For(_context.System).Props<Device>(clientId);
-                var deviceActor = _context.ActorOf(deviceProps, $"Device-{clientId}");
+                var deviceProps = DependencyResolver.For(ActorContext.System).Props<Device>(clientId);
+                var deviceActor = ActorContext.ActorOf(deviceProps, $"Device-{clientId}");
 
                 _deviceActors.AddOrSet(clientId, deviceActor);
             }
