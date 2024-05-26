@@ -25,6 +25,7 @@ public class DeviceManager : MQTTActor
         _deviceActors = new ConcurrentDictionary<string, IActorRef>();
 
         Receive<GetDevices>(HandleGetDevices);
+        Receive<GetTelemtry>(HandleGetTelemetry);
     }
 
     protected override void PreStart()
@@ -84,9 +85,14 @@ public class DeviceManager : MQTTActor
         return Task.CompletedTask;
     }
 
-    public void HandleGetDevices(GetDevices message)
+    private void HandleGetDevices(GetDevices message)
     {
         var connectedDevices = _deviceActors.Keys.ToList();
-        AskFor(new DeviceRetrieval(connectedDevices));
+        AskFor(new DeviceRetrieval(connectedDevices, message.DeviceId));
+    }
+
+    private void HandleGetTelemetry(GetTelemtry message)
+    {
+        AskFor(message);
     }
 }

@@ -1,4 +1,4 @@
-using Agrigate.IoT.Domain.DTOs;
+using Agrigate.Domain.DTOs.IoT;
 
 namespace Agrigate.IoT.Domain.Messages;
 
@@ -9,5 +9,5 @@ namespace Agrigate.IoT.Domain.Messages;
 /// <param name="Telemetry">A list of telemetry to record</param>
 public record TelemetryReceived(
     string DeviceId,
-    List<TelemetryReading> Telemetry
+    List<TelemetryData> Telemetry
 );

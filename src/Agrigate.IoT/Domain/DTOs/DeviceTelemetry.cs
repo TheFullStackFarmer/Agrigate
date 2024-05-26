@@ -1,25 +1,6 @@
+using Agrigate.Domain.DTOs.IoT;
+
 namespace Agrigate.IoT.Domain.DTOs;
-
-/// <summary>
-/// A telemetry reading from a device
-/// </summary>
-public class TelemetryReading
-{
-    /// <summary>
-    /// The timestamp of the telemetry
-    /// </summary>
-    public DateTimeOffset Timestamp { get; set; }
-
-    /// <summary>
-    /// The key for the telemetry
-    /// </summary>
-    public string Key { get; set; } = string.Empty;
-    
-    /// <summary>
-    /// The value for the telemetry
-    /// </summary>
-    public double Value { get; set; }
-}
 
 /// <summary>
 /// A telemetry message sent from a device to Agrigate
@@ -39,5 +20,5 @@ public class DeviceTelemetry
     /// <summary>
     /// A collection of telemetry readings
     /// </summary>
-    public List<TelemetryReading> Payload { get; set; } = [];
+    public List<TelemetryData> Payload { get; set; } = [];
 }

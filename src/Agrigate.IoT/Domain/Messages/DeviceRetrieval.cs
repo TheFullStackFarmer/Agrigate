@@ -5,4 +5,4 @@ namespace Agrigate.IoT.Domain.Messages;
 /// current status
 /// </summary>
 /// <param name="ActiveDevices">The currently connected devices</param>
-public record DeviceRetrieval(List<string> ActiveDevices);
+public record DeviceRetrieval(List<string> ActiveDevices, string? DeviceId);
