@@ -7,6 +7,7 @@ using Akka.DependencyInjection;
 using Akka.Event;
 using Microsoft.Extensions.Options;
 using MQTTnet.Client;
+using Newtonsoft.Json;
 
 namespace Agrigate.IoT.Actors.Devices;
 
@@ -127,12 +128,32 @@ public class Device : MQTTActor, IWithTimers
     {
         try
         {
-            // TODO: Handle events - only telemetry at the moment
             var message = System.Text.Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment);
-            Log.Info(message);
+            var telemetry = JsonConvert.DeserializeObject<DeviceTelemetry>(message);
+            
+            if (telemetry == null) 
+            {
+                Log.Warning($"Unable to deserialize message: {message}");
+                return Task.CompletedTask;
+            }
 
-            // var timestamp = DateTimeOffset.FromUnixTimeMilliseconds(connectionEvent?.Timestamp ?? 0);
-            // DateTime.TryParse(connectionEvent.ConnectedAt, out var time))
+            if (telemetry.Payload == null)
+            {
+                Log.Warning($"No payload detected: {message}");
+                return Task.CompletedTask;
+            }
+
+            var couldParse = Guid.TryParse(telemetry.DeviceKey, out var deviceKey);
+            if (!couldParse || deviceKey != _deviceKey)
+            {
+                Log.Warning($"Unable to verify message was from {_deviceId}: {message}");
+                return Task.CompletedTask;
+            }
+
+            var queryProps = DependencyResolver.For(ActorContext.System).Props<DeviceQueryActor>();
+            var queryHandler = ActorContext.ActorOf(queryProps);
+            
+            queryHandler.Tell(new TelemetryReceived(_deviceId, telemetry.Payload));
         }
         catch (Exception ex)
         {

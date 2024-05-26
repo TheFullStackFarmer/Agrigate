@@ -1,4 +1,4 @@
-# Sending Device Messages
+# Handling Device Messages
 
 When connecting to the message broker with a device, the device must have a
 unique DeviceId. Any messages sent by the device should be published to the
@@ -24,10 +24,9 @@ An example message containing the DeviceKey will look like this:
 }
 ```
 
-## Message Format
+## Receiving Messages on a Device
 
-All messages sent to and from devices must be a json string that adheres to the
-following format:
+All messages sent to devices will be a json string in the following format:
 
 ```
 {
@@ -47,7 +46,34 @@ where `DeviceMessageType` is an enum with the following values:
 {
     Unknown = 0,
     DeviceKey = 1,      # The message contains a device key for future communications
-    Telemetry = 2,      # The message contains telemetry data
     MethodCall = 3      # The message is meant to invoke a method
 }
 ```
+
+## Sending Telemetry from a Device
+
+When sending telemetry to Agrigate from a device, the DeviceKey must be included
+and any telemetry should be sent as an array under the Payload property. An
+example message can be seen below.
+
+```
+{
+  "DeviceKey": "183055ea-d973-40b5-9102-cf11db3cd7ee",
+  "Timestamp": "2024-05-25T23:29:19.1727947+00:00",
+  "Payload": [
+    {
+      "Timestamp": "2024-05-25T23:29:19.1727947+00:00",
+      "Key": "temperature",
+      "Value": 22
+    },
+    {
+      "Timestamp": "2024-05-25T23:29:19.1727947+00:00",
+      "Key": "humidity",
+      "Value": 22
+    }
+  ]
+}
+```
+
+If the DeviceKey does not align with the device's DeviceId, no telemetry will be
+recorded.

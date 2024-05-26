@@ -18,15 +18,14 @@ namespace Agrigate.IoT.Actors.Devices;
 /// </summary>
 public class DeviceManager : MQTTActor
 {
-    private readonly IActorContext _context;
     private ConcurrentDictionary<string, IActorRef> _deviceActors;
 
     public DeviceManager(IOptions<ServiceConfiguration> options) : base(options)
     {
         _deviceActors = new ConcurrentDictionary<string, IActorRef>();
-        _context = Context;
 
         Receive<GetDevices>(HandleGetDevices);
+        Receive<GetTelemtry>(HandleGetTelemetry);
     }
 
     protected override void PreStart()
@@ -72,8 +71,8 @@ public class DeviceManager : MQTTActor
                     return Task.CompletedTask;
                 }
                 
-                var deviceProps = DependencyResolver.For(_context.System).Props<Device>(clientId);
-                var deviceActor = _context.ActorOf(deviceProps, $"Device-{clientId}");
+                var deviceProps = DependencyResolver.For(ActorContext.System).Props<Device>(clientId);
+                var deviceActor = ActorContext.ActorOf(deviceProps, $"Device-{clientId}");
 
                 _deviceActors.AddOrSet(clientId, deviceActor);
             }
@@ -86,9 +85,14 @@ public class DeviceManager : MQTTActor
         return Task.CompletedTask;
     }
 
-    public void HandleGetDevices(GetDevices message)
+    private void HandleGetDevices(GetDevices message)
     {
         var connectedDevices = _deviceActors.Keys.ToList();
-        AskFor(new DeviceRetrieval(connectedDevices));
+        AskFor(new DeviceRetrieval(connectedDevices, message.DeviceId));
+    }
+
+    private void HandleGetTelemetry(GetTelemtry message)
+    {
+        AskFor(message);
     }
 }

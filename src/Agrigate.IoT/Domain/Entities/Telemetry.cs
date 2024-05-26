@@ -29,17 +29,17 @@ public class Telemetry : EntityBase
     public string Key { get; set; } = string.Empty;
 
     /// <summary>
-    /// A numeric value received from the interface
+    /// A numeric value received from the device
     /// </summary>
     public double? Value { get; set; }
 
     /// <summary>
-    /// A boolean value received from the interface
+    /// A boolean value received from the device
     /// </summary>
     public bool? BoolValue { get; set; }
 
     /// <summary>
-    /// A string value received from the interface
+    /// A string value received from the device
     /// </summary>
     public string? StringValue { get; set; }
 }
