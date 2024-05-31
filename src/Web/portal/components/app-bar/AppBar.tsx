@@ -11,7 +11,7 @@ export default function AppBar() {
 
   return (
     <>
-      <Typography>Agrigate</Typography>
+      <Typography fontSize="xl">Agrigate</Typography>
       <IconButton
         variant="plain"
         className="ml-auto"
