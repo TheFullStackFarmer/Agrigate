@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 
+import AppBar from "@/components/app-bar/AppBar";
+import Navigation from "@/components/navigation/Navigation";
+
 import "@fontsource/inter";
 import "./globals.css";
-import { IconButton, Typography } from "@mui/joy";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
-import AppBar from "@/components/app-bar/AppBar";
 
 export const metadata: Metadata = {
   title: "Agrigate",
@@ -27,8 +26,8 @@ export default function RootLayout({
         {/* Main Content */}
         <div className="flex flex-row flex-grow gap-4">
           {/* Navigation */}
-          <div className="bg-neutral-300 hidden md:block w-48 p-2 rounded-2xl">
-            <Typography className="text-center">Agrigate</Typography>
+          <div className="bg-neutral-300 hidden md:block w-60 p-2 rounded-2xl h-full">
+            <Navigation />
           </div>
 
           {/* Page Content */}
