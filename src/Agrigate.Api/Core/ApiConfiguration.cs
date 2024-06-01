@@ -16,4 +16,9 @@ public class ApiConfiguration
     /// The configuration for the IoT service
     /// </summary>
     public ServiceConfiguration IoTService { get; set; } = new();
+
+    /// <summary>
+    /// The configuration for the Authentication service
+    /// </summary>
+    public ServiceConfiguration AuthenticationService { get; set; } = new();
 }

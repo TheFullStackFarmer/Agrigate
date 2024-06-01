@@ -14,15 +14,15 @@ WORKDIR /src
 
 COPY ["Agrigate.Core/Agrigate.Core.csproj", "Agrigate.Core/"]
 COPY ["Agrigate.Domain/Agrigate.Domain.csproj", "Agrigate.Domain/"]
-COPY ["Agrigate.IoT/Agrigate.IoT.csproj", "Agrigate.IoT/"]
+COPY ["Services/Agrigate.IoT/Agrigate.IoT.csproj", "Services/Agrigate.IoT/"]
 
-RUN dotnet restore "Agrigate.IoT/Agrigate.IoT.csproj"
+RUN dotnet restore "Services/Agrigate.IoT/Agrigate.IoT.csproj"
 
 COPY ["Agrigate.Core/", "Agrigate.Core/"]
 COPY ["Agrigate.Domain/", "Agrigate.Domain/"]
-COPY ["Agrigate.IoT/", "Agrigate.IoT/"]
+COPY ["Services/Agrigate.IoT/", "Services/Agrigate.IoT/"]
 
-WORKDIR "/src/Agrigate.IoT"
+WORKDIR "/src/Services/Agrigate.IoT"
 RUN dotnet build "Agrigate.IoT.csproj" -c Release -o /app/build
 
 FROM build AS publish

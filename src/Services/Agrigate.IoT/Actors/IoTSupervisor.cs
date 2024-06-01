@@ -74,6 +74,7 @@ public class IoTSupervisor : ReceiveActor
             case IDeviceMessage:
                 _deviceManager.Forward(message);
                 break;
+                
             default:
                 var messageType = message.GetType().Name;
                 _log.Warning($"Unhandled message of type {messageType}");

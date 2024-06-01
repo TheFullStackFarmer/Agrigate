@@ -1,5 +1,6 @@
 using Agrigate.Api.Core;
 using Agrigate.Core;
+using Agrigate.Domain.Messages.IoT;
 using Akka.Actor;
 using Akka.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +27,7 @@ public class DevicesController : AgrigateController
         try 
         {
             var result = await ApiSupervisor.Ask(
-                new Domain.Messages.IoT.GetDevices(), 
+                new GetDevices(), 
                 Constants.MaxActorWaitTime
             );
 
@@ -52,7 +53,7 @@ public class DevicesController : AgrigateController
         try
         {
             var result = await ApiSupervisor.Ask(
-                new Domain.Messages.IoT.GetDevices(deviceId),
+                new GetDevices(deviceId),
                 Constants.MaxActorWaitTime
             );
 
@@ -84,7 +85,7 @@ public class DevicesController : AgrigateController
         try
         {
             var result = await ApiSupervisor.Ask(
-                new Domain.Messages.IoT.GetTelemtry(deviceId, startTime, endTime),
+                new GetTelemtry(deviceId, startTime, endTime),
                 Constants.MaxActorWaitTime
             );
 

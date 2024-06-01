@@ -46,11 +46,22 @@ services:
     ports:
       - 5001:5001
 
+  authentication:
+    build:
+      context: ./src
+      dockerfile: Dockerfile.Authentication
+    depends_on:
+      database:
+        condition: service_started
+    ports:
+      - 5011:5001
+
   api:
     build:
       context: ./src
       dockerfile: Dockerfile.API
     depends_on:
       - iot
+      - authentication
     ports:
       - 8080:8080

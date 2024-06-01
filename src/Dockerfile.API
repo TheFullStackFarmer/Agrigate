@@ -10,6 +10,9 @@ ENV Api__Service__Port 8081
 ENV Api__IoTService__ServiceName IoTService
 ENV Api__IoTService__Hostname iot
 ENV Api__IoTService__Port 5000
+ENV Api__AuthenticationService__ServiceName AuthenticationService
+ENV Api__AuthenticationService__HostName authentication
+ENV Api__AuthenticationService__Port 5000
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 as build
 WORKDIR /src

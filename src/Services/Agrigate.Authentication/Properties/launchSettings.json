@@ -1,0 +1,17 @@
+﻿{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "Agrigate.Authentication": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development",
+        "Service__Hostname": "localhost",
+        "Service__Port": "5010",
+        "Service__CmdPort": "5011",
+        "Service__MQTTHostname": "localhost",
+        "Service__DatabaseConnection": "Host=localhost;Database=authentication-service;Username=auth-service;Password=4uths3rv1c3"
+      }
+    }
+  }
+}

@@ -41,7 +41,7 @@ public class DeviceQueryActor : ReceiveActor
         var device = db.Devices
             .FirstOrDefault(device => device.DeviceId == message.DeviceId);
         device ??= db.Devices
-            .Add(new Domain.Entities.Device 
+            .Add(new Domain.Entities.Device
             {
                 DeviceId = message.DeviceId,
                 DeviceKey = Guid.NewGuid(),
