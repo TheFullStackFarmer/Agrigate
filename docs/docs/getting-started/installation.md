@@ -73,10 +73,12 @@ Agrigate is configured to use the following ports by default:
 
 #### Services
 
-| Item               | Port | Exposed Docker Port |
-| ------------------ | ---- | ------------------- |
-| IoT Akka.Remote    | 5000 |                     |
-| IoT Petabridge.CMD | 5001 | 5001                |
+| Item                          | Port | Exposed Docker Port |
+| ----------------------------- | ---- | ------------------- |
+| IoT Akka.Remote               | 5000 |                     |
+| IoT Petabridge.CMD            | 5001 | 5001                |
+| Authentication Akka.Remote    | 5000 |                     |
+| Authentication Petabridge.CMD | 5001 | 5011                |
 
 These can be changed to whatever you want via the `docker-compose.yml` and
 `DockerFile.{Service}` files.

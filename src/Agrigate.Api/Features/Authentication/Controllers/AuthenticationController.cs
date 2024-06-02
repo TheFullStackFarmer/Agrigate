@@ -7,6 +7,11 @@ using Akka.Actor;
 using Akka.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
+namespace Agrigate.Api.Controllers;
+
+/// <summary>
+/// Controller to handle authentication-related requests
+/// </summary>
 public class AuthenticationController : AgrigateController
 {
     public AuthenticationController(IRequiredActor<ApiSupervisor> supervisor) 

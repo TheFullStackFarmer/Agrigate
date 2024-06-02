@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Agrigate.Authentication.Domain.Contexts;
 
+/// <summary>
+/// Database context for the Agrigate Authentication service
+/// </summary>
 public class AuthenticationContext : DbContext
 {
     public AuthenticationContext(DbContextOptions<AuthenticationContext> options) 

@@ -7,6 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Agrigate.Authentication.Actors;
 
+/// <summary>
+/// The actor responsible for supervising the entire Agrigate Authentication service
+/// </summary>
 public class AuthenticationSupervisor : ReceiveActor
 {
     private readonly ILoggingAdapter _log;
