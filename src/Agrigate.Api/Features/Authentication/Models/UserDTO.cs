@@ -5,4 +5,4 @@ namespace Agrigate.Api.Features.Authentication.Models;
 /// </summary>
 /// <param name="Username">An encrypted username</param>
 /// <param name="Password">An encrypted password</param>
-public record UserRegistration(string Username, string Password);
+public record UserDTO(string Username, string Password);

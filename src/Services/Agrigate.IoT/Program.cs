@@ -36,7 +36,7 @@ builder.Services.AddAkka("IoTService", builder =>
         .WithRemoting(
             hostname: "0.0.0.0",
             publicHostname: serviceConfig.Hostname,
-            port: int.Parse(serviceConfig.Port)
+            port: serviceConfig.Port
         )
         .WithActors((system, registry, resolver) =>
         {
@@ -48,7 +48,7 @@ builder.Services.AddAkka("IoTService", builder =>
             new PetabridgeCmdOptions 
             {
                 Host = "0.0.0.0",
-                Port = int.Parse(serviceConfig.CmdPort ?? "0")
+                Port = serviceConfig.CmdPort
             },
             cmd => 
             {

@@ -18,12 +18,12 @@ public class ServiceConfiguration
     /// <summary>
     /// The port used by Akka.Remote
     /// </summary>
-    public string Port { get; set; } = string.Empty;
+    public int Port { get; set; }
 
     /// <summary>
     /// The port used by Petabridge.CMD
     /// </summary>
-    public string? CmdPort { get; set; }
+    public int CmdPort { get; set; }
 
     /// <summary>
     /// The host name of the MQTT Broker

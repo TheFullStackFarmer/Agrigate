@@ -7,6 +7,10 @@ ENV Service__Hostname authentication
 ENV Service__Port 5000
 ENV Service__CmdPort 5001
 ENV Service__DatabaseConnection Host=database;Database=authentication-service;Username=postgres;Password=pg@dm1n
+ENV Authentication__Issuer Agrigate
+ENV Authentication__Audience Agrigate
+ENV Authentication__SecretKey jXQ8Hjkwj7z0CZkt90eHp9ebBZ5rd5Kz
+ENV Authentication__TokenDurationHours 1 
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src

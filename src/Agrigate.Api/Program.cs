@@ -21,7 +21,7 @@ builder.Services.AddAkka("API", builder =>
         .WithRemoting(
             hostname: "0.0.0.0",
             publicHostname: apiConfig.Service.Hostname,
-            port: int.Parse(apiConfig.Service.Port)
+            port: apiConfig.Service.Port
         )
         .WithActors((system, registry) =>
         {

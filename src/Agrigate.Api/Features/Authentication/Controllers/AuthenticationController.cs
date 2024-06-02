@@ -1,6 +1,7 @@
 using Agrigate.Api.Core;
 using Agrigate.Api.Features.Authentication.Models;
 using Agrigate.Core;
+using Agrigate.Domain.DTOs;
 using Agrigate.Domain.Messages.Authentication;
 using Akka.Actor;
 using Akka.Hosting;
@@ -17,30 +18,30 @@ public class AuthenticationController : AgrigateController
     /// Generates a new public / private key pair
     /// </summary>
     /// <returns></returns>
-    [HttpPost("Key")]
-    public IActionResult GenerateKeyPair()
-    {
-        return Created(true);
-    }
+    // [HttpPost("Key")]
+    // public IActionResult GenerateKeyPair()
+    // {
+    //     return Created(true);
+    // }
 
     /// <summary>
     /// Returns the public RSA Key
     /// </summary>
     /// <returns></returns>
-    [HttpGet("Key")]
-    public IActionResult GetPublicKey()
-    {
-        // try
-        // {
-            return Success(true);
-        // }
-        // // catch (Exception ex)
-        // catch (Exception)
-        // {
-        //     // Logger.Error(ex, "Error generating public key: {Error}", ex.Message);
-        //     return Failure("Error generating public key");
-        // }
-    }
+    // [HttpGet("Key")]
+    // public IActionResult GetPublicKey()
+    // {
+    //     try
+    //     {
+    //         return Success(true);
+    //     }
+    //     // catch (Exception ex)
+    //     catch (Exception)
+    //     {
+    //         // Logger.Error(ex, "Error generating public key: {Error}", ex.Message);
+    //         return Failure("Error generating public key");
+    //     }
+    // }
 
     /// <summary>
     /// Attempts to register a new user
@@ -48,7 +49,7 @@ public class AuthenticationController : AgrigateController
     /// <param name="registration">The user details to register</param>
     /// <returns></returns>
     [HttpPost("Register")]
-    public async Task<IActionResult> Register(UserRegistration registration)
+    public async Task<IActionResult> Register(UserDTO registration)
     {
         try 
         {
@@ -73,10 +74,27 @@ public class AuthenticationController : AgrigateController
     /// </summary>
     /// <returns></returns>
     [HttpPost("Token")]
-    public IActionResult GenerateUserToken()
+    public async Task<IActionResult> GenerateUserToken(UserDTO credentials)
     {
-        return Success(true);
-    }
+        try
+        {
+            var result = await ApiSupervisor.Ask(
+                new GenerateToken(credentials.Username, credentials.Password),
+                Constants.MaxActorWaitTime
+            );
 
-    // Create a user: https://github.com/StrykerDG/StrykerDG.FarmForge/blob/master/StrykerDG.FarmForge.Actors/Authentication/AuthenticationActor.cs
+            if (result is Exception exception)
+                throw exception;
+
+            return Success(result);
+        }
+        catch(Unauthorized)
+        {
+            return Unauthorized();
+        }
+        catch (Exception ex)
+        {
+            return Failure($"Unable to generate token: {ex.Message}");
+        }
+    }
 }

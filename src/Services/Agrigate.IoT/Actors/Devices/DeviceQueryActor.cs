@@ -183,7 +183,7 @@ public class DeviceQueryActor : ReceiveActor
 
             var telemetry = query.OrderBy(t => t.Timestamp).ToList();
 
-            var result = new Agrigate.Domain.DTOs.IoT.DeviceTelemetry
+            var result = new DeviceTelemetry
             {
                 DeviceId = device.DeviceId,
                 Telemetry = telemetry.Select(t => new TelemetryData

@@ -39,15 +39,15 @@ namespace Agrigate.Authentication.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    FirstName = table.Column<string>(type: "text", nullable: false),
-                    LastName = table.Column<string>(type: "text", nullable: false),
+                    FirstName = table.Column<string>(type: "text", nullable: true),
+                    LastName = table.Column<string>(type: "text", nullable: true),
                     Phone = table.Column<string>(type: "text", nullable: true),
                     Email = table.Column<string>(type: "text", nullable: true),
                     Username = table.Column<string>(type: "text", nullable: false),
                     Password = table.Column<string>(type: "text", nullable: false),
                     ForcePasswordReset = table.Column<bool>(type: "boolean", nullable: false),
                     PasswordExpiration = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    LastLogin = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    LastLogin = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                     Created = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     Modified = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false)

@@ -10,7 +10,11 @@
         "Service__Port": "5010",
         "Service__CmdPort": "5011",
         "Service__MQTTHostname": "localhost",
-        "Service__DatabaseConnection": "Host=localhost;Database=authentication-service;Username=auth-service;Password=4uths3rv1c3"
+        "Service__DatabaseConnection": "Host=localhost;Database=authentication-service;Username=auth-service;Password=4uths3rv1c3",
+        "Authentication__Issuer": "Agrigate",
+        "Authentication__Audience": "Agrigate",
+        "Authentication__SecretKey": "jXQ8Hjkwj7z0CZkt90eHp9ebBZ5rd5Kz",
+        "Authentication__TokenDurationHours": "1"
       }
     }
   }

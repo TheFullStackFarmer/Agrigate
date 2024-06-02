@@ -1,5 +1,7 @@
 using Agrigate.Authentication.Actors;
+using Agrigate.Authentication.Configuration;
 using Agrigate.Authentication.Domain.Contexts;
+using Agrigate.Authentication.Services;
 using Agrigate.Core.Configuration;
 using Akka.Hosting;
 using Akka.Remote.Hosting;
@@ -15,6 +17,15 @@ var builder = Host.CreateApplicationBuilder(args);
 
 var serviceConfig = new ServiceConfiguration();
 builder.Configuration.Bind("Service", serviceConfig);
+
+builder.Services.Configure<AuthenticationOptions>(
+    builder.Configuration.GetSection("Authentication"));
+
+//////////////////////////////////////////
+//          Configure Services          //
+//////////////////////////////////////////
+
+builder.Services.AddTransient<IAuthenticationService, AuthenticationService>();
 
 //////////////////////////////////////////
 //            Database Setup            //
@@ -33,7 +44,7 @@ builder.Services.AddAkka("AuthenticationService", builder =>
         .WithRemoting(
             hostname: "0.0.0.0",
             publicHostname: serviceConfig.Hostname,
-            port: int.Parse(serviceConfig.Port)
+            port: serviceConfig.Port
         )
         .WithActors((system, registry, resolver) =>
         {
@@ -45,7 +56,7 @@ builder.Services.AddAkka("AuthenticationService", builder =>
             new PetabridgeCmdOptions
             {
                 Host = "0.0.0.0",
-                Port = int.Parse(serviceConfig.CmdPort ?? "0")
+                Port = serviceConfig.CmdPort
             },
             cmd =>
             {

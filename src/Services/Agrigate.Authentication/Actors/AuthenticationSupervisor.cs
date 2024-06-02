@@ -1,3 +1,4 @@
+using Agrigate.Authentication.Actors.Users;
 using Agrigate.Authentication.Domain.Contexts;
 using Agrigate.Domain.Messages.Authentication;
 using Akka.Actor;
@@ -10,6 +11,8 @@ public class AuthenticationSupervisor : ReceiveActor
 {
     private readonly ILoggingAdapter _log;
     private readonly IServiceProvider _serviceProvider;
+
+    private IActorRef? _userManager;
 
     public AuthenticationSupervisor(IServiceProvider serviceProvider)
     {
@@ -24,6 +27,7 @@ public class AuthenticationSupervisor : ReceiveActor
         _log.Info($"{nameof(AuthenticationSupervisor)} starting...");
 
         SetupDatabase();
+        CreateManagers();
 
         _log.Info($"{nameof(AuthenticationSupervisor)} ready!");
     }
@@ -45,12 +49,22 @@ public class AuthenticationSupervisor : ReceiveActor
         _log.Info($"{nameof(SetupDatabase)} completed!");
     }
 
+    private void CreateManagers()
+    {
+        _log.Info($"{nameof(CreateManagers)} running...");
+
+        var userManagerProps = Props.Create(() => new UserManager());
+        _userManager = Context.ActorOf(userManagerProps, "UserManager");
+
+        _log.Info($"{nameof(CreateManagers)} completed!");
+    }
+
     private void RequestHandler(object message)
     {
         switch (message)
         {
             case IAuthenticationMessage:
-                Sender.Tell(true);
+                _userManager.Forward(message);
                 break;
                 
             default:

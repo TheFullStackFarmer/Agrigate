@@ -37,7 +37,6 @@ namespace Agrigate.Authentication.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("ForcePasswordReset")
@@ -46,11 +45,10 @@ namespace Agrigate.Authentication.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<DateTimeOffset>("LastLogin")
+                    b.Property<DateTimeOffset?>("LastLogin")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTimeOffset>("Modified")
