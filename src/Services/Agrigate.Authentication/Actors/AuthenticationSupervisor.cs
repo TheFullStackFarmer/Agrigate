@@ -1,25 +1,23 @@
-using Agrigate.Core;
-using Agrigate.Domain.Messages.IoT;
-using Agrigate.IoT.Actors.Devices;
-using Agrigate.IoT.Domain.Contexts;
+using Agrigate.Authentication.Actors.Users;
+using Agrigate.Authentication.Domain.Contexts;
+using Agrigate.Domain.Messages.Authentication;
 using Akka.Actor;
-using Akka.DependencyInjection;
 using Akka.Event;
 using Microsoft.EntityFrameworkCore;
 
-namespace Agrigate.IoT.Actors;
+namespace Agrigate.Authentication.Actors;
 
 /// <summary>
-/// The actor responsible for supervising the entire Agrigate IoT service
+/// The actor responsible for supervising the entire Agrigate Authentication service
 /// </summary>
-public class IoTSupervisor : ReceiveActor
+public class AuthenticationSupervisor : ReceiveActor
 {
     private readonly ILoggingAdapter _log;
     private readonly IServiceProvider _serviceProvider;
 
-    private IActorRef? _deviceManager;
+    private IActorRef? _userManager;
 
-    public IoTSupervisor(IServiceProvider serviceProvider)
+    public AuthenticationSupervisor(IServiceProvider serviceProvider)
     {
         _log = Logging.GetLogger(Context) ?? throw new ApplicationException("Unable to retrieve logger");
         _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
@@ -29,12 +27,12 @@ public class IoTSupervisor : ReceiveActor
 
     protected override void PreStart()
     {
-        _log.Info($"{nameof(IoTSupervisor)} starting...");
+        _log.Info($"{nameof(AuthenticationSupervisor)} starting...");
 
         SetupDatabase();
         CreateManagers();
 
-        _log.Info($"{nameof(IoTSupervisor)} ready!");
+        _log.Info($"{nameof(AuthenticationSupervisor)} ready!");
     }
 
     /// <summary>
@@ -46,7 +44,7 @@ public class IoTSupervisor : ReceiveActor
 
         using var scope = _serviceProvider.CreateScope();
         var dbFactory = scope.ServiceProvider
-            .GetRequiredService<IDbContextFactory<IoTContext>>();
+            .GetRequiredService<IDbContextFactory<AuthenticationContext>>();
         using var db = dbFactory.CreateDbContext();
 
         db.Database.Migrate();
@@ -54,26 +52,24 @@ public class IoTSupervisor : ReceiveActor
         _log.Info($"{nameof(SetupDatabase)} completed!");
     }
 
-    /// <summary>
-    /// Creates the required managers to run various aspects of the IoT service
-    /// </summary>
     private void CreateManagers()
     {
         _log.Info($"{nameof(CreateManagers)} running...");
 
-        var deviceManagerProps = DependencyResolver.For(Context.System).Props<DeviceManager>();
-        _deviceManager = Context.ActorOf(deviceManagerProps, "DeviceManager");
+        var userManagerProps = Props.Create(() => new UserManager());
+        _userManager = Context.ActorOf(userManagerProps, "UserManager");
 
-        _log.Info($"{nameof(CreateManagers)} completed!");        
+        _log.Info($"{nameof(CreateManagers)} completed!");
     }
 
     private void RequestHandler(object message)
     {
         switch (message)
         {
-            case IDeviceMessage:
-                _deviceManager.Forward(message);
+            case IAuthenticationMessage:
+                _userManager.Forward(message);
                 break;
+                
             default:
                 var messageType = message.GetType().Name;
                 _log.Warning($"Unhandled message of type {messageType}");

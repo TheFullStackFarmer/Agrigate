@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Agrigate.Domain\Agrigate.Domain.csproj" />
-    <ProjectReference Include="..\Agrigate.Core\Agrigate.Core.csproj" />
+    <ProjectReference Include="..\..\Agrigate.Domain\Agrigate.Domain.csproj" />
+    <ProjectReference Include="..\..\Agrigate.Core\Agrigate.Core.csproj" />
   </ItemGroup>
 </Project>

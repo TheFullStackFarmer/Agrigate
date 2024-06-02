@@ -31,6 +31,8 @@ platforms.
 
 - [.Net](https://dotnet.microsoft.com/en-us/) - Business logic and services
 - [Akka.Net](https://petabridge.com/) - Actor Model
+- [MQTTnet](https://github.com/dotnet/MQTTnet) - MQTT Communication
+- [EF Core](https://learn.microsoft.com/en-us/ef/core/) - Data Model & Migrations
 
 #### Web Application
 

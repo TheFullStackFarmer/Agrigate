@@ -27,6 +27,11 @@ services:
   database:
     image: postgres
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     environment:
       - "POSTGRES_PASSWORD=pg@dm1n"
     volumes:
@@ -42,9 +47,19 @@ services:
       message-broker:
         condition: service_healthy
       database:
-        condition: service_started
+        condition: service_healthy
     ports:
       - 5001:5001
+
+  authentication:
+    build:
+      context: ./src
+      dockerfile: Dockerfile.Authentication
+    depends_on:
+      database:
+        condition: service_healthy
+    ports:
+      - 5011:5001
 
   api:
     build:
@@ -52,5 +67,6 @@ services:
       dockerfile: Dockerfile.API
     depends_on:
       - iot
+      - authentication
     ports:
       - 8080:8080

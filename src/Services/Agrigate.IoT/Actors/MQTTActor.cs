@@ -1,8 +1,7 @@
+using Agrigate.Core.Actors;
 using Agrigate.Core.Configuration;
-using Agrigate.IoT.Actors.Devices;
 using Agrigate.IoT.Domain.DTOs;
 using Akka.Actor;
-using Akka.DependencyInjection;
 using Akka.Event;
 using Microsoft.Extensions.Options;
 using MQTTnet;
@@ -12,7 +11,7 @@ using Newtonsoft.Json;
 /// <summary>
 /// A base actor that contains logic for connecting to an MQTT broker
 /// </summary>
-public abstract class MQTTActor : ReceiveActor
+public abstract class MQTTActor : AgrigateActor
 {
     protected readonly ILoggingAdapter Log;
     protected readonly ServiceConfiguration Configuration;
@@ -123,22 +122,6 @@ public abstract class MQTTActor : ReceiveActor
         {
             Log.Error($"Error publishing message: {ex.Message}");
         }
-    }
-
-    /// <summary>
-    /// Asks the DeviceQueryActor a given message
-    /// </summary>
-    /// <typeparam name="TMessage">The type of message being sent to the 
-    /// DeviceQueryActor</typeparam>
-    /// <param name="sender">The original sender of the request</param>
-    /// <param name="message">The message to send the DeviceQueryActor</param>
-    protected static void AskFor<TMessage>(TMessage message)
-        where TMessage : class
-    {
-        var queryProps = DependencyResolver.For(Context.System).Props<DeviceQueryActor>();
-        var queryHandler = Context.ActorOf(queryProps);
-
-        queryHandler.Forward(message);
     }
 
     /// <summary>

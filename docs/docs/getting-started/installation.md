@@ -19,14 +19,20 @@ Before installing Agrigate, be sure to have the following:
 ```
 - README.md
 - docker-compose.yml
-- dc
+- dc                          # Docker-Compose volumes
   - message-broker
-    - etc               # EMQX config files
+    - etc                     # EMQX config files
+  - database
+    - data                    # Postgres data files
 - src
-  - Agrigate.Api        # The public api for interacting with Agrigate
-  - Agrigate.Domain     # Models and data shared between projects
-  - Agrigate.IoT        # The IoT service
-- docs                  # This documentation site
+  - Tests
+    - Agrigate.xxx.Tests      # Test projects the API and each service
+  - Services
+    - Agrigate.Authentication # The Authentication service
+    - Agrigate.IoT            # The IoT service
+  - Agrigate.Api              # The public api for interacting with Agrigate
+  - Agrigate.Domain           # Models and data shared between projects
+- docs                        # This documentation site
 ```
 
 ## Setup
@@ -67,10 +73,12 @@ Agrigate is configured to use the following ports by default:
 
 #### Services
 
-| Item               | Port | Exposed Docker Port |
-| ------------------ | ---- | ------------------- |
-| IoT Akka.Remote    | 5000 |                     |
-| IoT Petabridge.CMD | 5001 | 5001                |
+| Item                          | Port | Exposed Docker Port |
+| ----------------------------- | ---- | ------------------- |
+| IoT Akka.Remote               | 5000 |                     |
+| IoT Petabridge.CMD            | 5001 | 5001                |
+| Authentication Akka.Remote    | 5000 |                     |
+| Authentication Petabridge.CMD | 5001 | 5011                |
 
 These can be changed to whatever you want via the `docker-compose.yml` and
 `DockerFile.{Service}` files.
@@ -83,7 +91,14 @@ docker-compose build
 docker-compose up
 ```
 
-At this point, you should see an MQTT broker, the IoT service, and API running.
+At this point, you should the following containers running:
+
+- EMQX
+- Postgres
+- IoT service
+- Authentication service
+- API
+
 You can access the MQTT broker by navigating to http://localhost:18083 and
 logging in with:
 
@@ -91,3 +106,5 @@ logging in with:
 - Password: public
 
 You'll be promted to change the password when you log in
+
+You can also access the API swagger docs at http://localhost:8080/swagger

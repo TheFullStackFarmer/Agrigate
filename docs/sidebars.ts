@@ -33,6 +33,7 @@ const sidebars: SidebarsConfig = {
         "design/architecture/platform",
         "design/architecture/services",
         "design/architecture/iot",
+        "design/architecture/authentication",
       ],
     },
     {

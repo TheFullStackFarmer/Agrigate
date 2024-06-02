@@ -88,11 +88,12 @@ public class DeviceManager : MQTTActor
     private void HandleGetDevices(GetDevices message)
     {
         var connectedDevices = _deviceActors.Keys.ToList();
-        AskFor(new DeviceRetrieval(connectedDevices, message.DeviceId));
+        AskFor<DeviceRetrieval, DeviceQueryActor>(
+            new DeviceRetrieval(connectedDevices, message.DeviceId));
     }
 
     private void HandleGetTelemetry(GetTelemtry message)
     {
-        AskFor(message);
+        AskFor<GetTelemtry, DeviceQueryActor>(message);
     }
 }
