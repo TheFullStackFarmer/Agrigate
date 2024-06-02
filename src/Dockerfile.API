@@ -13,6 +13,10 @@ ENV Api__IoTService__Port 5000
 ENV Api__AuthenticationService__ServiceName AuthenticationService
 ENV Api__AuthenticationService__HostName authentication
 ENV Api__AuthenticationService__Port 5000
+ENV Api__Authentication__Issuer Agrigate
+ENV Api__Authentication__Audience Agrigate
+ENV Api__Authentication__SecretKey jXQ8Hjkwj7z0CZkt90eHp9ebBZ5rd5Kz
+ENV Api__Authentication__TokenDurationHours 1
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 as build
 WORKDIR /src

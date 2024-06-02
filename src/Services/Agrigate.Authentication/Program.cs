@@ -1,5 +1,4 @@
 using Agrigate.Authentication.Actors;
-using Agrigate.Authentication.Configuration;
 using Agrigate.Authentication.Domain.Contexts;
 using Agrigate.Authentication.Services;
 using Agrigate.Core.Configuration;

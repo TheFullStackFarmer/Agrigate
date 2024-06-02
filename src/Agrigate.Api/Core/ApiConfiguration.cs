@@ -21,4 +21,9 @@ public class ApiConfiguration
     /// The configuration for the Authentication service
     /// </summary>
     public ServiceConfiguration AuthenticationService { get; set; } = new();
+
+    /// <summary>
+    /// Authentication Options for the API
+    /// </summary>
+    public AuthenticationOptions Authentication { get; set; } = new();
 }

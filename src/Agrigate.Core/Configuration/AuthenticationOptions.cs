@@ -1,4 +1,4 @@
-namespace Agrigate.Authentication.Configuration;
+namespace Agrigate.Core.Configuration;
 
 /// <summary>
 /// Configuration options for the Authentication service used for 

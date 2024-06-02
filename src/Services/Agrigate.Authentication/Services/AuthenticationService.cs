@@ -1,8 +1,8 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Agrigate.Authentication.Configuration;
 using Agrigate.Authentication.Domain.Entities;
+using Agrigate.Core.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 

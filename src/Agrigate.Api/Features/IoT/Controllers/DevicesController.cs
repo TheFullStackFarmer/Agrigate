@@ -3,6 +3,7 @@ using Agrigate.Core;
 using Agrigate.Domain.Messages.IoT;
 using Akka.Actor;
 using Akka.Hosting;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Agrigate.Api.Controllers.Features.IoT.Controllers;
@@ -21,6 +22,7 @@ public class DevicesController : AgrigateController
     /// Retrieves a list of devices registered with Agrigate
     /// </summary>
     /// <returns></returns>
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetDevices()
     {
@@ -47,6 +49,7 @@ public class DevicesController : AgrigateController
     /// </summary>
     /// <param name="deviceId">The DeviceId to query for</param>
     /// <returns></returns>
+    [Authorize]
     [HttpGet("{deviceId}")]
     public async Task<IActionResult> GetDevice(string deviceId)
     {
@@ -75,6 +78,7 @@ public class DevicesController : AgrigateController
     /// <param name="startTime">The earliest UTC date time for which to retrieve telemetry</param>
     /// <param name="endTime">The latest UTC date time for which to retrieve telemetry</param>
     /// <returns></returns>
+    [Authorize]
     [HttpGet("{deviceId}/Telemetry")]
     public async Task<IActionResult> GetDeviceTelemetry(
         string deviceId,
