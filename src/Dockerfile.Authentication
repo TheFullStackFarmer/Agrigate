@@ -1,0 +1,37 @@
+FROM mcr.microsoft.com/dotnet/runtime:8.0 AS base
+WORKDIR /app
+EXPOSE 5000
+EXPOSE 5001
+
+ENV Service__Hostname authentication
+ENV Service__Port 5000
+ENV Service__CmdPort 5001
+ENV Service__DatabaseConnection Host=database;Database=authentication-service;Username=postgres;Password=pg@dm1n
+ENV Authentication__Issuer Agrigate
+ENV Authentication__Audience Agrigate
+ENV Authentication__SecretKey jXQ8Hjkwj7z0CZkt90eHp9ebBZ5rd5Kz
+ENV Authentication__TokenDurationHours 1 
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+COPY ["Agrigate.Core/Agrigate.Core.csproj", "Agrigate.Core/"]
+COPY ["Agrigate.Domain/Agrigate.Domain.csproj", "Agrigate.Domain/"]
+COPY ["Services/Agrigate.Authentication/Agrigate.Authentication.csproj", "Services/Agrigate.Authentication/"]
+
+RUN dotnet restore "Services/Agrigate.Authentication/Agrigate.Authentication.csproj"
+
+COPY ["Agrigate.Core/", "Agrigate.Core/"]
+COPY ["Agrigate.Domain/", "Agrigate.Domain/"]
+COPY ["Services/Agrigate.Authentication/", "Services/Agrigate.Authentication/"]
+
+WORKDIR "/src/Services/Agrigate.Authentication"
+RUN dotnet build "Agrigate.Authentication.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "Agrigate.Authentication.csproj" -c Release -o /app/publish
+
+FROM base as final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "Agrigate.Authentication.dll"]

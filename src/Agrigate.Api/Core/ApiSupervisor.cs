@@ -1,4 +1,5 @@
 using Agrigate.Core;
+using Agrigate.Domain.Messages.Authentication;
 using Agrigate.Domain.Messages.IoT;
 using Akka.Actor;
 using Akka.Event;
@@ -14,6 +15,7 @@ public class ApiSupervisor : ReceiveActor
     private readonly ApiConfiguration _configuration;
 
     private ActorSelection? _iotSupervisor;
+    private ActorSelection? _authSupervisor;
 
     public ApiSupervisor(ApiConfiguration config)
     {
@@ -36,6 +38,9 @@ public class ApiSupervisor : ReceiveActor
         var iotConfig = _configuration.IoTService;
         _iotSupervisor = Context.ActorSelection($"akka.tcp://{iotConfig.ServiceName}@{iotConfig.Hostname}:{iotConfig.Port}/user/Supervisor");
 
+        var authConfig = _configuration.AuthenticationService;
+        _authSupervisor = Context.ActorSelection($"akka.tcp://{authConfig.ServiceName}@{authConfig.Hostname}:{authConfig.Port}/user/Supervisor");
+
         _log.Info($"{nameof(InstantiateSupervisors)} completed!");
     }
 
@@ -51,6 +56,14 @@ public class ApiSupervisor : ReceiveActor
                         Constants.MaxActorWaitTime
                     ).PipeTo(Sender);
                     break;
+
+                case IAuthenticationMessage:
+                    _authSupervisor.Ask(
+                        message,
+                        Constants.MaxActorWaitTime
+                    ).PipeTo(Sender);
+                    break;
+
                 default:
                     var messageType = message.GetType().Name;
                     _log.Warning($"Unhandled message of type {messageType}");

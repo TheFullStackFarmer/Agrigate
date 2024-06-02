@@ -21,7 +21,14 @@
         "Api__Service__Port": "8081",
         "Api__IoTService__ServiceName": "IoTService",
         "Api__IoTService__Hostname": "localhost",
-        "Api__IoTService__Port": "5000"
+        "Api__IoTService__Port": "5000",
+        "Api__AuthenticationService__ServiceName": "AuthenticationService",
+        "Api__AuthenticationService__HostName": "localhost",
+        "Api__AuthenticationService__Port": "5010",
+        "Api__Authentication__Issuer": "Agrigate",
+        "Api__Authentication__Audience": "Agrigate",
+        "Api__Authentication__SecretKey": "jXQ8Hjkwj7z0CZkt90eHp9ebBZ5rd5Kz",
+        "Api__Authentication__TokenDurationHours": "1"
       }
     },
     "https": {
@@ -36,7 +43,14 @@
         "Api__Service__Port": "8081",
         "Api__IoTService__ServiceName": "IoTService",
         "Api__IoTService__Hostname": "localhost",
-        "Api__IoTService__Port": "5000"
+        "Api__IoTService__Port": "5000",
+        "Api__AuthenticationService__ServiceName": "AuthenticationService",
+        "Api__AuthenticationService__HostName": "localhost",
+        "Api__AuthenticationService__Port": "5010",
+        "Api__Authentication__Issuer": "Agrigate",
+        "Api__Authentication__Audience": "Agrigate",
+        "Api__Authentication__SecretKey": "jXQ8Hjkwj7z0CZkt90eHp9ebBZ5rd5Kz",
+        "Api__Authentication__TokenDurationHours": "1"
       }
     },
     "IIS Express": {
@@ -49,7 +63,14 @@
         "Api__Service__Port": "8081",
         "Api__IoTService__ServiceName": "IoTService",
         "Api__IoTService__Hostname": "localhost",
-        "Api__IoTService__Port": "5000"
+        "Api__IoTService__Port": "5000",
+        "Api__AuthenticationService__ServiceName": "AuthenticationService",
+        "Api__AuthenticationService__HostName": "localhost",
+        "Api__AuthenticationService__Port": "5010",
+        "Api__Authentication__Issuer": "Agrigate",
+        "Api__Authentication__Audience": "Agrigate",
+        "Api__Authentication__SecretKey": "jXQ8Hjkwj7z0CZkt90eHp9ebBZ5rd5Kz",
+        "Api__Authentication__TokenDurationHours": "1"
       }
     }
   }

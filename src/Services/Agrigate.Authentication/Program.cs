@@ -1,6 +1,7 @@
+using Agrigate.Authentication.Actors;
+using Agrigate.Authentication.Domain.Contexts;
+using Agrigate.Authentication.Services;
 using Agrigate.Core.Configuration;
-using Agrigate.IoT.Actors;
-using Agrigate.IoT.Domain.Contexts;
 using Akka.Hosting;
 using Akka.Remote.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -16,41 +17,47 @@ var builder = Host.CreateApplicationBuilder(args);
 var serviceConfig = new ServiceConfiguration();
 builder.Configuration.Bind("Service", serviceConfig);
 
-builder.Services.Configure<ServiceConfiguration>(
-    builder.Configuration.GetSection("Service"));
+builder.Services.Configure<AuthenticationOptions>(
+    builder.Configuration.GetSection("Authentication"));
+
+//////////////////////////////////////////
+//          Configure Services          //
+//////////////////////////////////////////
+
+builder.Services.AddTransient<IAuthenticationService, AuthenticationService>();
 
 //////////////////////////////////////////
 //            Database Setup            //
 //////////////////////////////////////////
 
-builder.Services.AddDbContextFactory<IoTContext>(options =>
+builder.Services.AddDbContextFactory<AuthenticationContext>(options =>
     options.UseNpgsql(serviceConfig.DatabaseConnection));
 
 //////////////////////////////////////////
 //               Akka.Net               //
 //////////////////////////////////////////
 
-builder.Services.AddAkka("IoTService", builder =>
+builder.Services.AddAkka("AuthenticationService", builder =>
 {
     builder
         .WithRemoting(
             hostname: "0.0.0.0",
             publicHostname: serviceConfig.Hostname,
-            port: int.Parse(serviceConfig.Port)
+            port: serviceConfig.Port
         )
         .WithActors((system, registry, resolver) =>
         {
-            var supervisorProps = resolver.Props<IoTSupervisor>();
+            var supervisorProps = resolver.Props<AuthenticationSupervisor>();
             var supervisor = system.ActorOf(supervisorProps, "Supervisor");
-            registry.Register<IoTSupervisor>(supervisor);
+            registry.Register<AuthenticationSupervisor>(supervisor);
         })
         .AddPetabridgeCmd(
-            new PetabridgeCmdOptions 
+            new PetabridgeCmdOptions
             {
                 Host = "0.0.0.0",
-                Port = int.Parse(serviceConfig.CmdPort ?? "0")
+                Port = serviceConfig.CmdPort
             },
-            cmd => 
+            cmd =>
             {
                 cmd.RegisterCommandPalette(new RemoteCommands());
             }
