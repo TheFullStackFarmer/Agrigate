@@ -5,6 +5,7 @@ import Navigation from "@/components/navigation/Navigation";
 
 import "@fontsource/inter";
 import "./globals.css";
+import AuthContext from "@/components/auth-context/AuthContext";
 
 export const metadata: Metadata = {
   title: "Agrigate",
@@ -19,22 +20,21 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <body className="bg-neutral-200 p-4 h-full flex flex-col gap-4">
-        <header className="bg-neutral-300 flex items-center md:hidden p-4 rounded-2xl">
-          <AppBar />
-        </header>
+        <AuthContext>
+          <header className="bg-neutral-300 flex items-center md:hidden p-4 rounded-2xl">
+            <AppBar />
+          </header>
 
-        {/* Main Content */}
-        <div className="flex flex-row flex-grow gap-4">
-          {/* Navigation */}
-          <nav className="bg-neutral-300 hidden md:block w-60 p-2 rounded-2xl h-full">
-            <Navigation />
-          </nav>
+          <div className="flex flex-row flex-grow gap-4">
+            <nav className="bg-neutral-300 hidden md:block w-60 p-2 rounded-2xl h-full">
+              <Navigation />
+            </nav>
 
-          {/* Page Content */}
-          <main className="bg-neutral-300 flex-grow p-2 rounded-2xl">
-            {children}
-          </main>
-        </div>
+            <main className="bg-neutral-300 flex-grow p-2 rounded-2xl">
+              {children}
+            </main>
+          </div>
+        </AuthContext>
       </body>
     </html>
   );
