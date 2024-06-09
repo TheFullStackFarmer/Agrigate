@@ -70,3 +70,12 @@ services:
       - authentication
     ports:
       - 8080:8080
+
+  portal:
+    build:
+      context: ./src
+      dockerfile: Dockerfile.Portal
+    depends_on:
+      - api
+    ports:
+      - 8081:3000

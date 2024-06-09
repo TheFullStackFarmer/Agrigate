@@ -38,7 +38,7 @@ const handler = NextAuth({
       },
       async authorize(credentials, req) {
         const response = await fetch(
-          "http://localhost:5098/Authentication/Token",
+          `${process.env.API_URL}/Authentication/Token`,
           {
             method: "POST",
             body: JSON.stringify(credentials),
