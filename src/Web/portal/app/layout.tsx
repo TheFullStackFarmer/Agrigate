@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 
 import AppBar from "@/components/app-bar/AppBar";
+import AuthContext from "@/components/auth-context/AuthContext";
 import Navigation from "@/components/navigation/Navigation";
 
 import "@fontsource/inter";
 import "./globals.css";
-import AuthContext from "@/components/auth-context/AuthContext";
 
 export const metadata: Metadata = {
   title: "Agrigate",

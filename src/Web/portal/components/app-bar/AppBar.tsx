@@ -1,10 +1,12 @@
 "use client";
 
+import { useState } from "react";
+
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Drawer, IconButton, Typography } from "@mui/joy";
-import { useState } from "react";
-import Navigation from "../navigation/Navigation";
+
+import Navigation from "@/components/navigation/Navigation";
 
 export default function AppBar() {
   const [open, setOpen] = useState(false);
