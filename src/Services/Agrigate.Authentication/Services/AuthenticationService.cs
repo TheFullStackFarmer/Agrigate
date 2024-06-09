@@ -26,7 +26,13 @@ public class AuthenticationService : IAuthenticationService
 
         var claims = new List<Claim>
         {
-            new("User", user.Username)
+            new("sub", user.Id.ToString()),
+            new("name", $"{user.FirstName} {user.LastName}"),
+            new("givenname", user.FirstName ?? ""),
+            new("surname", user.LastName ?? ""),
+            new("emailaddress", user.Email ?? ""),
+            new("homephone", user.Phone ?? ""),
+            new("upn", user.Username)
         };
 
         var tokenOptions = new JwtSecurityToken(

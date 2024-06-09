@@ -47,9 +47,11 @@ git clone https://github.com/TheFullStackFarmer/Agrigate.git
 
 ### Configuration
 
+#### Defaults
+
 Agrigate is configured to use the following ports by default:
 
-#### MQTT
+##### MQTT
 
 | Item             | Port  | Exposed Docker Port |
 | ---------------- | ----- | ------------------- |
@@ -58,20 +60,20 @@ Agrigate is configured to use the following ports by default:
 | MQTT / Websocket | 8083  | 8083                |
 | Dashboard        | 18083 | 18083               |
 
-#### Database
+##### Database
 
 | Item       | Port | Exposed Docker Port |
 | ---------- | ---- | ------------------- |
 | PostgreSQL | 5432 | 8000                |
 
-#### API
+##### API
 
 | Item            | Port | Exposed Docker Port |
 | --------------- | ---- | ------------------- |
 | Api Akka.Remote | 8081 |                     |
 | HTTP Web API    | 8080 | 8080                |
 
-#### Services
+##### Services
 
 | Item                          | Port | Exposed Docker Port |
 | ----------------------------- | ---- | ------------------- |
@@ -80,8 +82,27 @@ Agrigate is configured to use the following ports by default:
 | Authentication Akka.Remote    | 5000 |                     |
 | Authentication Petabridge.CMD | 5001 | 5011                |
 
+##### Portal
+
+| Item       | Port | Exposed Docker Port |
+| ---------- | ---- | ------------------- |
+| Web Portal | 3000 | 8081                |
+
 These can be changed to whatever you want via the `docker-compose.yml` and
 `DockerFile.{Service}` files.
+
+#### Updates
+
+Before running Agrigate, it's recommended to change the following configurations
+and environment variables
+
+##### Portal
+
+For the web portal, update the following in `src/Web/portal/.env`
+
+```
+NEXTAUTH_SECRET=XXX
+```
 
 ### Run Docker-Compose
 
@@ -98,6 +119,7 @@ At this point, you should the following containers running:
 - IoT service
 - Authentication service
 - API
+- Web Portal
 
 You can access the MQTT broker by navigating to http://localhost:18083 and
 logging in with:
@@ -108,3 +130,20 @@ logging in with:
 You'll be promted to change the password when you log in
 
 You can also access the API swagger docs at http://localhost:8080/swagger
+
+### Create a User
+
+In order to log in and utilize Agrigate, you must first create a user. The
+initial user will need to be created via the API at
+`http://localhost:8080/Authentication/Register`. You can either use an API
+client of your choice or the swagger docs. The payload will look like
+
+```
+{
+  "Username": "MyUser",
+  "Password": "MyPassword"
+}
+```
+
+Once created, those crentials can be used to login to the web app at
+http://localhost:8081
